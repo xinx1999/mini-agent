@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mini Agent · 会自己调工具的助手</title>
+<style>
+  :root {
+    --bg: #131317;
+    --panel: #1b1b21;
+    --panel-2: #23232b;
+    --border: #31313c;
+    --text: #e9e9ef;
+    --muted: #9595a3;
+    --accent: #6ea8fe;
+    --ok: #4ec9a0;
+    --bad: #e2726e;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 15px/1.65 system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel);
+    flex: none;
+  }
+  header h1 { font-size: 15px; font-weight: 500; margin: 0; }
+  header .sub { font-size: 12px; color: var(--muted); }
+  header .spacer { flex: 1; }
+  header button {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 7px;
+    padding: 5px 11px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  header button:hover { color: var(--text); border-color: #454552; }
+
+  main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 20px 8px;
+    scroll-behavior: smooth;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+
+  .empty { color: var(--muted); font-size: 14px; padding: 40px 0; text-align: center; }
+  .empty code {
+    font-family: var(--mono);
+    font-size: 13px;
+    background: var(--panel-2);
+    padding: 2px 6px;
+    border-radius: 5px;
+    color: var(--accent);
+  }
+
+  .msg { margin-bottom: 18px; display: flex; }
+  .msg.user { justify-content: flex-end; }
+  .bubble {
+    max-width: 82%;
+    padding: 11px 15px;
+    border-radius: 12px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .msg.user .bubble { background: #2b4a7d; color: #eaf2ff; }
+  .msg.agent .bubble { background: var(--panel-2); border: 1px solid var(--border); }
+
+  .tools { margin-bottom: 14px; }
+  .tool {
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    background: var(--panel);
+    border-radius: 8px;
+    padding: 9px 12px;
+    margin-bottom: 12px;
+    font-size: 13px;
+  }
+  .tool.bad { border-left-color: var(--bad); }
+  .tool-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .tool-name { font-family: var(--mono); color: var(--accent); font-size: 12.5px; }
+  .tool.bad .tool-name { color: var(--bad); }
+  .tool-args { font-family: var(--mono); font-size: 12px; color: var(--muted); flex: 1;
+               overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tool-ms { font-size: 11px; color: #6b6b7a; flex: none; }
+  .tool-body {
+    display: none;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    white-space: pre-wrap;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  .tool.open .tool-body { display: block; }
+
+  .thinking { color: var(--muted); font-size: 13.5px; padding: 4px 2px; }
+  .thinking .dot { animation: blink 1.3s infinite; }
+  .thinking .dot:nth-child(2) { animation-delay: .22s; }
+  .thinking .dot:nth-child(3) { animation-delay: .44s; }
+  @keyframes blink { 0%, 60%, 100% { opacity: .25 } 30% { opacity: 1 } }
+
+  .err {
+    border: 1px solid #5c2f2e;
+    background: #2a1a1a;
+    color: #f0b3b1;
+    border-radius: 8px;
+    padding: 11px 14px;
+    font-size: 13px;
+    white-space: pre-wrap;
+    margin-bottom: 18px;
+  }
+
+  footer {
+    flex: none;
+    border-top: 1px solid var(--border);
+    background: var(--panel);
+    padding: 12px 20px 14px;
+  }
+  .composer { max-width: 760px; margin: 0 auto; display: flex; gap: 10px; align-items: flex-end; }
+  textarea {
+    flex: 1;
+    resize: none;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font: inherit;
+    padding: 10px 13px;
+    max-height: 160px;
+    outline: none;
+  }
+  textarea:focus { border-color: #45507a; }
+  .composer button {
+    background: var(--accent);
+    color: #0b1524;
+    border: 0;
+    border-radius: 10px;
+    padding: 11px 20px;
+    font: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    flex: none;
+  }
+  .composer button:disabled { opacity: .45; cursor: not-allowed; }
+
+  .stats {
+    max-width: 760px;
+    margin: 8px auto 0;
+    font-size: 11.5px;
+    color: #6b6b7a;
+    font-family: var(--mono);
+    min-height: 15px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Mini Agent</h1>
+  <span class="sub">会自己决定调哪个工具</span>
+  <span class="spacer"></span>
+  <button id="reset" type="button">清空会话</button>
+</header>
+
+<main>
+  <div class="wrap" id="messages">
+    <div class="empty" id="empty">
+      试着问点需要动手查的东西，比如：<br><br>
+      <code>现在长沙几点？这个目录下有什么文件？再算一下 17 的平方根乘 3</code><br><br>
+      注意看它自己决定调哪几个工具。
+    </div>
+  </div>
+</main>
+
+<footer>
+  <form class="composer" id="composer">
+    <textarea id="input" rows="1" placeholder="输入任务，Enter 发送，Shift+Enter 换行"></textarea>
+    <button id="send" type="submit">发送</button>
+  </form>
+  <div class="stats" id="stats"></div>
+</footer>
+
+<script>
+// ── 会话 id ────────────────────────────────────────────────
+// 存 localStorage，这样刷新页面还能接着聊（历史在服务端）
+function newId() {
+  return (crypto.randomUUID && crypto.randomUUID()) ||
+    ('sess-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8));
+}
+
+let sessionId;
+try {
+  sessionId = localStorage.getItem('agent-session') || newId();
+  localStorage.setItem('agent-session', sessionId);
+} catch {
+  // 隐私模式下 localStorage 可能直接抛错。这里降级成内存 id：
+  // 本次会话照常能用，只是刷新后历史对不上——比整个页面用不了强。
+  sessionId = newId();
+}
+
+// ── DOM ───────────────────────────────────────────────────
+const messagesEl = document.getElementById('messages');
+const emptyEl = document.getElementById('empty');
+const formEl = document.getElementById('composer');
+const inputEl = document.getElementById('input');
+const sendEl = document.getElementById('send');
+const statsEl = document.getElementById('stats');
+
+function atBottom() {
+  return messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight < 120;
+}
+function scrollDown(force) {
+  if (force || atBottom()) messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+function hideEmpty() {
+  if (emptyEl) emptyEl.style.display = 'none';
+}
+
+function el(tag, cls, text) {
+  const node = document.createElement(tag);
+  if (cls) node.className = cls;
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+// ── 渲染 ──────────────────────────────────────────────────
+function addUser(text) {
+  hideEmpty();
+  const wrap = el('div', 'msg user');
+  wrap.appendChild(el('div', 'bubble', text));
+  messagesEl.appendChild(wrap);
+  scrollDown(true);
+}
+
+function addAgent(text) {
+  const wrap = el('div', 'msg agent');
+  wrap.appendChild(el('div', 'bubble', text));
+  messagesEl.appendChild(wrap);
+  scrollDown();
+}
+
+function addOneTool(s) {
+  const card = el('div', 'tool' + (s.ok ? '' : ' bad'));
+  const head = el('div', 'tool-head');
+  head.appendChild(el('span', 'tool-name', s.name));
+  head.appendChild(el('span', 'tool-args', s.args || '{}'));
+  head.appendChild(el('span', 'tool-ms', s.ms + 'ms'));
+  card.appendChild(head);
+
+  const body = el('div', 'tool-body', s.result);
+  card.appendChild(body);
+
+  head.addEventListener('click', () => card.classList.toggle('open'));
+  messagesEl.appendChild(card);
+  scrollDown();
+  return card;
+}
+
+function addTools(steps) {
+  const toolSteps = steps.filter((s) => s.type === 'tool');
+  for (const s of toolSteps) addOneTool(s);
+}
+
+function addError(text) {
+  messagesEl.appendChild(el('div', 'err', text));
+  scrollDown(true);
+}
+
+function addThinking() {
+  const node = el('div', 'thinking');
+  node.innerHTML = '正在思考<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>';
+  messagesEl.appendChild(node);
+  scrollDown(true);
+  return node;
+}
+
+function showStats(t) {
+  statsEl.textContent =
+    `模型 ${t.llmCalls} 次 · 工具 ${t.toolCalls} 次（失败 ${t.failedTools}）· ` +
+    `token ${t.totalTokens} · ${t.totalMs}ms`;
+}
+
+// ── 发送 ──────────────────────────────────────────────────
+let busy = false;
+
+function setBusy(value) {
+  busy = value;
+  sendEl.disabled = value;
+  inputEl.disabled = value;
+  if (!value) inputEl.focus();
+}
+
+async function send(text) {
+  setBusy(true);
+  addUser(text);
+  const thinking = addThinking();
+
+  // agent 气泡懒创建：收到第一个 token 才建，这样"还没开始回答"时
+  // 占位的是「正在思考」而不是一个空气泡。
+  let bubble = null;
+  const ensureBubble = () => {
+    if (bubble) return bubble;
+    thinking.remove();
+    const wrap = el('div', 'msg agent');
+    const node = el('div', 'bubble');
+    wrap.appendChild(node);
+    messagesEl.appendChild(wrap);
+    bubble = node;
+    return node;
+  };
+
+  try {
+    const res = await fetch('/api/chat/stream', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text, sessionId }),
+    });
+
+    if (!res.ok || !res.body) {
+      // 请求还没进 SSE 就失败了（参数错、服务没起）
+      let message = `HTTP ${res.status}`;
+      try {
+        const data = await res.json();
+        message = data.error || message;
+      } catch {
+        // 拿不到 JSON 就用状态码
+      }
+      thinking.remove();
+      addError(message);
+      return;
+    }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+
+      // SSE 同样按行解析，最后那半行留到下一次
+      const lines = buffer.split('\n');
+      buffer = lines.pop() ?? '';
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed.startsWith('data:')) continue;
+        const payload = trimmed.slice(5).trim();
+        if (!payload) continue;
+
+        let evt;
+        try {
+          evt = JSON.parse(payload);
+        } catch {
+          continue;
+        }
+
+        if (evt.type === 'token') {
+          ensureBubble().textContent += evt.text ?? '';
+          scrollDown();
+        } else if (evt.type === 'step' && evt.event && evt.event.type === 'tool') {
+          thinking.remove();
+          addOneTool(evt.event);
+        } else if (evt.type === 'error') {
+          thinking.remove();
+          addError(evt.error || '未知错误');
+        } else if (evt.type === 'done') {
+          // 流里没收到 token（比如模型直接给了 answer 字段）时兜底
+          if (!bubble && typeof evt.answer === 'string' && evt.answer) {
+            ensureBubble().textContent = evt.answer;
+          }
+          if (evt.trace) showStats(evt.trace);
+        }
+      }
+    }
+
+    thinking.remove();
+    if (!bubble) addAgent('(没有得到任何回答)');
+  } catch (err) {
+    thinking.remove();
+    // 网络层错误：多半是服务端没起来
+    addError(`连不上服务端：${err.message}\n确认服务在跑吗？`);
+  } finally {
+    setBusy(false);
+  }
+}
+
+formEl.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (busy) return;
+  const text = inputEl.value.trim();
+  if (!text) return;
+  inputEl.value = '';
+  inputEl.style.height = 'auto';
+  send(text);
+});
+
+inputEl.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    formEl.requestSubmit();
+  }
+});
+
+inputEl.addEventListener('input', () => {
+  inputEl.style.height = 'auto';
+  inputEl.style.height = Math.min(inputEl.scrollHeight, 160) + 'px';
+});
+
+document.getElementById('reset').addEventListener('click', () => {
+  try {
+    localStorage.removeItem('agent-session');
+  } catch {
+    // 存不了也就清不了，下面照样换新 id
+  }
+  sessionId = newId();
+  try {
+    localStorage.setItem('agent-session', sessionId);
+  } catch {
+    // 同上，降级即可
+  }
+  messagesEl.querySelectorAll('.msg, .tools, .err').forEach((n) => n.remove());
+  if (emptyEl) emptyEl.style.display = '';
+  statsEl.textContent = '';
+});
+
+inputEl.focus();
+</script>
+</body>
+</html>

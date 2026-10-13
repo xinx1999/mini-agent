@@ -1,0 +1,14 @@
+{
+  "name": "mini-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "零依赖的最小 agent 实现：一个循环 + 三个工具，用来理解 agent 的本质",
+  "scripts": {
+    "start": "node --env-file=.env server.ts",
+    "cli": "node --env-file=.env index.ts",
+    "web": "node --env-file=.env server.ts",
+    "demo": "node test/demo-env.mjs",
+    "test": "node test/run-test.mjs && node test/multi-turn.mjs && node test/server-test.mjs && node test/rag-test.mjs && node test/search-test.mjs && node test/compress-test.mjs && node test/retry-test.mjs"
+  }
+}

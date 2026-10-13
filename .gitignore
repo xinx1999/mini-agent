@@ -1,0 +1,21 @@
+# 依赖与构建产物
+node_modules/
+
+# 密钥 —— 绝对不能提交
+.env
+
+# 运行时数据
+.agent-memory/
+.playwright-cli/
+
+# 编辑器/调试临时文件
+.probe.ts
+.probe2.ts
+
+# WorkBuddy 内部记录（项目日志、部署标记）
+.workbuddy/
+.workbuddy-ai/
+.wbapp_*.genie
+
+# 私人求职材料，不公开
+面试讲述稿.md
