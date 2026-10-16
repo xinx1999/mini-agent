@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 应用工程师 · 学习中心</title>
+<style>
+  :root {
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d212b; --line:#2a2f3a;
+    --fg:#e6e9ef; --dim:#9aa3b2; --accent:#5b9dff; --accent2:#7ee0c0;
+    --warn:#ffcf6b; --badge:#2a3340;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",Segoe UI,Roboto,sans-serif;
+    line-height:1.65; font-size:15px; }
+  header { position:sticky; top:0; z-index:20; background:rgba(15,17,21,.92);
+    backdrop-filter:blur(8px); border-bottom:1px solid var(--line); padding:14px 22px; }
+  header h1 { margin:0; font-size:18px; letter-spacing:.5px; }
+  header h1 span { color:var(--accent); }
+  nav { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+  nav button { background:var(--panel2); color:var(--dim); border:1px solid var(--line);
+    padding:7px 14px; border-radius:8px; cursor:pointer; font-size:14px; transition:.15s; }
+  nav button:hover { color:var(--fg); }
+  nav button.active { background:var(--accent); color:#0f1115; border-color:var(--accent); font-weight:600; }
+  main { max-width:1080px; margin:0 auto; padding:24px 22px 80px; }
+  .intro { background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:14px 18px; margin-bottom:20px; color:var(--dim); }
+  .intro b { color:var(--fg); }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    padding:18px 20px; margin-bottom:18px; }
+  .card h3 { margin:0 0 12px; font-size:17px; }
+  .stage-head { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  .badge { background:var(--badge); color:var(--accent2); border-radius:6px; padding:3px 10px;
+    font-size:13px; white-space:nowrap; }
+  .stage h3 { margin:0; }
+  .goal { color:var(--fg); margin:6px 0; }
+  .watch { color:var(--dim); font-size:14px; margin:6px 0 12px; }
+  .takeaway { background:var(--panel2); border-left:3px solid var(--accent); border-radius:0 8px 8px 0;
+    padding:10px 14px; margin:12px 0 0; color:var(--fg); font-size:14px; }
+  .output { color:var(--accent2); font-size:14px; margin:10px 0 0; }
+  .table-wrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; font-size:13.5px; }
+  th,td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { color:var(--dim); font-weight:600; background:var(--panel2); position:sticky; top:0; }
+  .mono { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+  .small { font-size:12.5px; color:var(--dim); }
+  .questions li { margin:6px 0; }
+  /* knowledge */
+  .kgroup-title { font-size:16px; color:var(--accent); margin:22px 0 12px;
+    border-bottom:1px solid var(--line); padding-bottom:6px; }
+  .kgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:14px; }
+  .kcard { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px 16px; }
+  .kcard-head { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .kcard-head h4 { margin:0; font-size:15px; }
+  .src { font-size:12px; color:var(--accent2); white-space:nowrap; }
+  .kone { color:var(--warn); font-weight:600; margin:8px 0 6px; font-size:14px; }
+  .kdetail { color:var(--dim); font-size:13.5px; margin:0; }
+  /* project */
+  .pgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:14px; }
+  .pcard { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px 16px; }
+  .pcard h4 { margin:0 0 6px; color:var(--accent); font-size:14px; }
+  .prole { margin:0 0 8px; font-weight:600; }
+  .prel { font-size:13px; color:var(--dim); margin:0 0 6px; }
+  .phow { font-size:13.5px; margin:0; color:var(--fg); }
+  .phow b, .prel b { color:var(--dim); }
+  /* note lib */
+  .searchbar { margin-bottom:18px; }
+  #nsearch { width:100%; padding:11px 14px; background:var(--panel2); border:1px solid var(--line);
+    border-radius:10px; color:var(--fg); font-size:15px; }
+  #nsearch:focus { outline:none; border-color:var(--accent); }
+  .chips { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
+  .chip { background:var(--panel2); color:var(--dim); border:1px solid var(--line);
+    padding:5px 12px; border-radius:20px; cursor:pointer; font-size:13px; }
+  .chip.active { background:var(--accent); color:#0f1115; border-color:var(--accent); }
+  .ngroup { margin-bottom:26px; }
+  .ngroup h3 { font-size:16px; margin:0 0 12px; }
+  .count { color:var(--dim); font-size:14px; font-weight:400; }
+  .ngrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px; }
+  .ncard { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:12px 14px;
+    display:flex; flex-direction:column; }
+  .ncard-head { display:flex; align-items:baseline; gap:8px; margin-bottom:6px; }
+  .ntag { background:var(--badge); color:var(--accent2); border-radius:5px; padding:2px 7px; font-size:12px; }
+  .ntitle { font-weight:600; font-size:14px; }
+  .nsum { color:var(--dim); font-size:13px; margin:0 0 10px; flex:1; }
+  .nlink { color:var(--accent); font-size:13px; text-decoration:none; align-self:flex-start; }
+  .nlink:hover { text-decoration:underline; }
+  .hidden { display:none !important; }
+  footer { text-align:center; color:var(--dim); font-size:12.5px; padding:20px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>AI 应用工程师 · <span>学习中心</span></h1>
+  <nav>
+    <button data-tab="roadmap" class="active">🗺️ 学习路线</button>
+    <button data-tab="knowledge">📚 知识点</button>
+    <button data-tab="project">🛠️ 项目实操</button>
+    <button data-tab="notes">📝 笔记库（165）</button>
+  </nav>
+</header>
+<main>
+  <div id="roadmap" class="tab">
+    <div class="intro">
+      <p>四阶段把「手写 agent 项目」和「行业框架（LangChain / LangGraph / FastAPI / RAG）」串起来。
+      每看完一P 问自己三句话（见底部）。</p>
+    </div>
+    
+        <section class="card stage">
+          <div class="stage-head">
+            <span class="badge">第 1 周</span>
+            <h3>阶段 1：LangChain 组件 ↔ 你的手写实现</h3>
+          </div>
+          <p class="goal">把黑马的 LangChain 组件课看掉。核心是把「框架组件」和「你手写的文件」一一对上号——框架不是新东西，是你代码的抽象版。</p>
+          <p class="watch"><b>要看：</b>黑马 P11-16（提示词）+ P17-18 + P22-38</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>P</th><th>标题</th><th>盯住什么</th><th>对应项目</th><th>面试怎么用</th></tr></thead>
+              <tbody><tr><td class='mono'>P11</td><td>大模型 prompt 工程指南</td><td>一个 prompt 拆成哪几块（角色/任务/约束/示例/格式）</td><td class='mono small'>src/agent.ts 的 system prompt</td><td class='small'>问“你怎么写 system prompt”</td></tr><tr><td class='mono'>P12</td><td>零样本 / 少样本</td><td>什么时候给例子、给几个</td><td class='mono small'>同上</td><td class='small'>少样本 = few-shot，术语要会</td></tr><tr><td class='mono'>P13-16</td><td>三个优化案例（分类/抽取/匹配）</td><td>任务拆解的思路，不是具体业务</td><td class='mono small'>工具 description 设计</td><td class='small'>怎么让模型稳定输出结构化结果</td></tr><tr><td class='mono'>P17</td><td>LangChain 简介</td><td>它到底解决什么问题（组件标准化 + 编排）</td><td class='mono small'>你整个项目就是它的手写版</td><td class='small'>“为什么要有框架”</td></tr><tr><td class='mono'>P22</td><td>调用大语言模型</td><td>ChatOpenAI 构造参数</td><td class='mono small'>src/llm.ts</td><td class='small'>Models 组件</td></tr><tr><td class='mono'>P23</td><td>模型的流式输出</td><td>流式事件怎么来、怎么拼</td><td class='mono small'>src/llm.ts + web/index.html</td><td class='small'>你的 SSE 打字机 = 它的 stream()</td></tr><tr><td class='mono'>P24-25</td><td>消息简写</td><td>System/Human/AI Message</td><td class='mono small'>src/types.ts ★</td><td class='small'>“消息协议”这个词</td></tr><tr><td class='mono'>P26</td><td>调用嵌入模型</td><td>Embeddings 接口长什么样</td><td class='mono small'>src/rag.ts（你现在是 TF-IDF）</td><td class='small'>阶段 3 的地基</td></tr><tr><td class='mono'>P31</td><td>Chain 的基础使用</td><td>固定流程的编排</td><td class='mono small'>src/agent.ts 的非循环部分</td><td class='small'>★ Chain vs Agent 必考</td></tr><tr><td class='mono'>P35</td><td>JsonOutputParser + 多模型链</td><td>解析成 JSON、失败怎么办</td><td class='mono small'>src/llm.ts 解析 tool_calls.arguments</td><td class='small'>结构化输出的可靠性</td></tr><tr><td class='mono'>P36</td><td>自定义函数加入链</td><td>把普通函数包成链的一环</td><td class='mono small'>src/tools.ts</td><td class='small'>Tools 组件</td></tr><tr><td class='mono'>P37-38</td><td>Memory 临时/长期会话记忆</td><td>存什么、存哪、怎么截断</td><td class='mono small'>src/memory.ts ★★★</td><td class='small'>记忆分层设计（高频）</td></tr></tbody>
+            </table>
+          </div>
+          <p class="takeaway">💡 框架的 Memory 模块 = 我 memory.ts 里落盘 messages 的封装；框架的 Chain = 我 agent.ts 里那几行固定顺序的调用。差别是抽象层次，不是原理。</p>
+          
+        </section>
+        <section class="card stage">
+          <div class="stage-head">
+            <span class="badge">第 2-3 周</span>
+            <h3>阶段 2：FastAPI（异步后端）</h3>
+          </div>
+          <p class="goal">先补 Python 语法对照（1-2 天），再看核心路由/传参/校验部分。重点不是 Python 本身，而是「为什么 AI 后端要异步」——和你 server.ts 的取舍是同一题。</p>
+          <p class="watch"><b>要看：</b>P01、P04-14（P02-03 原标可跳，实测讲就业方向/技术栈分层，建议看）</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>P</th><th>标题</th><th>盯住什么</th><th>对应项目</th><th>面试怎么用</th></tr></thead>
+              <tbody><tr><td class='mono'>P01</td><td>Web 开发模式</td><td>同步/异步、WSGI/ASGI 的区别</td><td class='mono small'>Node 的 http vs 事件循环</td><td class='small'></td></tr><tr><td class='mono'>P04</td><td>ASGI 协议和服务</td><td>为什么 AI 后端要异步</td><td class='mono small'>server.ts 单线程非阻塞</td><td class='small'></td></tr><tr><td class='mono'>P05-07</td><td>第一个程序 / 路由 / 启动</td><td>装饰器路由 ↔ Express app.get()</td><td class='mono small'>server.ts 的路由分支</td><td class='small'></td></tr><tr><td class='mono'>P08-11</td><td>路由分发 / 传参 / URL 传参</td><td>路径参数、查询参数</td><td class='mono small'>你 URL 里的 ?session=</td><td class='small'></td></tr><tr><td class='mono'>P12-14</td><td>数据校验 / 请求体传参</td><td>Pydantic ↔ Zod</td><td class='mono small'>server.ts 里的手工校验</td><td class='small'></td></tr></tbody>
+            </table>
+          </div>
+          <p class="takeaway">💡 ASGI 的异步模型 ↔ 你 Node 单线程事件循环；Pydantic 校验 ↔ 你 server.ts 里手工写的字段校验。</p>
+          <p class='output'>🎯 <b>产出：</b>把 server.ts 翻译成 FastAPI，跑通 SSE 流式接口。</p>
+        </section>
+        <section class="card stage">
+          <div class="stage-head">
+            <span class="badge">第 4-5 周</span>
+            <h3>阶段 3：向量检索 + RAG 评测 ⭐</h3>
+          </div>
+          <p class="goal">RAG 是应用岗的核心。黑马讲工程闭环，RAG 教程补「多路召回 / Rerank / 评估」三块——这三块是你项目相对视频最容易做出差异化的地方。</p>
+          <p class="watch"><b>要看：</b>黑马 P19-21 + P39-54；RAG 教程 P01-04 + P08-11 + P19-20 + P22-24 + P35-41</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>P</th><th>标题</th><th>盯住什么</th><th>对应项目</th><th>面试怎么用</th></tr></thead>
+              <tbody><tr><td class='mono'>黑马 P19</td><td>RAG 完整链路</td><td>离线入库 / 在线检索</td><td class='mono small'>src/rag.ts + src/docs.ts</td><td class='small'></td></tr><tr><td class='mono'>黑马 P20-21</td><td>向量基础 / 余弦相似度</td><td>你已实现了余弦，只看差异</td><td class='mono small'>src/rag.ts</td><td class='small'></td></tr><tr><td class='mono'>黑马 P39-42</td><td>Loader / 文档分割器</td><td>读取与切分</td><td class='mono small'>src/docs.ts</td><td class='small'></td></tr><tr><td class='mono'>黑马 P43</td><td>VectorStores</td><td>你现在是内存 TF-IDF 索引</td><td class='mono small'>src/rag.ts</td><td class='small'></td></tr><tr><td class='mono'>黑马 P46-54</td><td>RAG 项目全流程</td><td>上传→md5→更新→离线→在线→会话→页面</td><td class='mono small'>server.ts + web</td><td class='small'></td></tr><tr><td class='mono'>RAG P08-11</td><td>查询转换 / 混合检索 / 多路召回</td><td>★ 你的“杀手锏”就在这</td><td class='mono small'>src/search.ts</td><td class='small'></td></tr><tr><td class='mono'>RAG P35-36</td><td>Rerank（交叉编码 vs 双编码）</td><td>召回后的第二道工序</td><td class='mono small'>src/rag.ts / search.ts</td><td class='small'></td></tr><tr><td class='mono'>RAG P37-40</td><td>向量库选型 / 相似度 / 索引</td><td>面试选型题</td><td class='mono small'></td><td class='small'></td></tr><tr><td class='mono'>RAG P41</td><td>评估：指标 / RAGAs / TruLens</td><td>★★ 你手写的 142 条断言 + 黄金集</td><td class='mono small'>test/</td><td class='small'></td></tr></tbody>
+            </table>
+          </div>
+          <p class="takeaway">💡 RAG 评估是高频挂点：确定性部分用断言（你 142 条），非确定性用黄金问题集跑命中率。</p>
+          <p class='output'>🎯 <b>产出：</b>保留关键词通道 + 新增向量通道 → 20 个真实问题跑三组（关键词/向量/混合）→ 统计命中率 → 写结论。</p>
+        </section>
+        <section class="card stage">
+          <div class="stage-head">
+            <span class="badge">第 6 周</span>
+            <h3>阶段 4：Agent 架构 + 评估体系</h3>
+          </div>
+          <p class="goal">从「一个循环」升级到「工程化 Agent」。黑马补 ReAct + middleware，FastAPI Harness 补 Planning/Multi-Agent/Sandbox，尚硅谷补 LangGraph 状态机。</p>
+          <p class="watch"><b>要看：</b>黑马 P55-67；RAG P26-31 + P41-42；FastAPI P15-37；尚硅谷 P08-12 / 28-34 / 40-47 / 56-60 / 98-100 / 107-108 / 128-132</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>P</th><th>标题</th><th>盯住什么</th><th>对应项目</th><th>面试怎么用</th></tr></thead>
+              <tbody><tr><td class='mono'>黑马 P55-59</td><td>Agent 介绍 / 初体验 / 流式 / ReAct / middleware</td><td>ReAct 框架落地</td><td class='mono small'>src/agent.ts</td><td class='small'></td></tr><tr><td class='mono'>黑马 P60-67</td><td>Agent 项目（日志/配置/向量/RAG总结/tools/UI）</td><td>完整工程样板</td><td class='mono small'>全项目</td><td class='small'></td></tr><tr><td class='mono'>RAG P26-31</td><td>RAGFlow / Naive / 高级 / 模块化 RAG</td><td>层次索引/句子窗口/HyDE/FLARE</td><td class='mono small'>src/rag.ts</td><td class='small'></td></tr><tr><td class='mono'>FastAPI P15-37</td><td>Harness 架构</td><td>Planning/Multi-Agent/Sandbox/Skills/Context Eng/SSE</td><td class='mono small'>src/agent.ts</td><td class='small'></td></tr><tr><td class='mono'>尚硅谷 P08-12</td><td>LangGraph 三要素 / StateGraph</td><td>图运行过程、最小闭环</td><td class='mono small'>src/agent.ts 的循环</td><td class='small'></td></tr><tr><td class='mono'>尚硅谷 P40-47</td><td>循环结构 + agent 构建</td><td>LangGraph 版的“我的那个 for 循环”</td><td class='mono small'>src/agent.ts</td><td class='small'></td></tr><tr><td class='mono'>尚硅谷 P56-60</td><td>持久化与检查点</td><td>“可恢复执行”是什么</td><td class='mono small'>src/memory.ts</td><td class='small'></td></tr><tr><td class='mono'>尚硅谷 P98-100</td><td>LangSmith 调试</td><td>“你怎么调试 agent”的答案</td><td class='mono small'>src/trace.ts</td><td class='small'></td></tr><tr><td class='mono'>尚硅谷 P128-132</td><td>四种图设计模式</td><td>提示词链/路由/编排器-工作者/评估器-优化器</td><td class='mono small'></td><td class='small'></td></tr></tbody>
+            </table>
+          </div>
+          <p class="takeaway">💡 ⚠️ 学习路线原写“看黑马里讲 LangGraph 的 P”，但实测黑马 67P 里根本没有 LangGraph——它的 Agent 用 LangChain Agent + middleware。LangGraph 一半要靠尚硅谷那套补。</p>
+          
+        </section>
+    <section class="card">
+      <h3>看完每一P 都问自己这三个问题</h3>
+      <ol class="questions"><li>这和我项目里的哪个文件是同一件事？（答不上来 → 这P 对你没价值，跳过）</li><li>它讲没讲“为什么不用另一种写法”？（只讲“这样写”的是 API 说明书，价值低）</li><li>这句话我能在面试里说出来吗？（说不出来 → 记进笔记，别只点头）</li></ol>
+    </section></div>
+  <div id="knowledge" class="tab hidden">
+        <section class="kgroup">
+          <h3 class="kgroup-title">LangChain 与基础</h3>
+          <div class="kgrid"><div class="kcard">
+              <div class="kcard-head"><h4>LangChain 五大组件</h4><span class="src">阶段1 P17</span></div>
+              <p class="kone">Models / Prompts / Chains / Memory / Tools&amp;Agents</p>
+              <p class="kdetail">你项目一一对应：llm.ts / system prompt / agent.ts / memory.ts / tools.ts。框架是这些能力的标准化封装，不是新原理。</p>
+            </div><div class="kcard">
+              <div class="kcard-head"><h4>LCEL</h4><span class="src">阶段1 P32-33</span></div>
+              <p class="kone">用 | 把组件串成管道，靠 Runnable 接口统一</p>
+              <p class="kdetail">所有组件实现 Runnable（invoke/stream/batch），prompt | model | parser 就是一条链。价值是统一了“可组合”的协议。</p>
+            </div><div class="kcard">
+              <div class="kcard-head"><h4>Chain vs Agent（必考）</h4><span class="src">阶段1 P31</span></div>
+              <p class="kone">Chain 是固定流程，Agent 是动态决策</p>
+              <p class="kdetail">Chain 路径写死；Agent 由模型自己决定调哪个工具、调几次。你项目是纯 Agent（for 循环），可直接说“我手写的循环就是 Agent 最小形态”。</p>
+            </div><div class="kcard">
+              <div class="kcard-head"><h4>Function / Tool Calling</h4><span class="src">阶段1 P35-36</span></div>
+              <p class="kone">模型只输出结构化调用请求，执行永远是你的代码</p>
+              <p class="kdetail">模型不执行工具，它输出「工具名 + 参数 JSON」。你 llm.ts 里按 index 拼 tool_calls.arguments 就是这件事的细节。</p>
+            </div></div>
+        </section>
+        <section class="kgroup">
+          <h3 class="kgroup-title">Agent 与推理</h3>
+          <div class="kgrid"><div class="kcard">
+              <div class="kcard-head"><h4>ReAct</h4><span class="src">黑马 P55-59</span></div>
+              <p class="kone">Reasoning + Acting 交替：想一步→做一步→看结果→再想</p>
+              <p class="kdetail">对应你循环里的“调模型 → 拿 tool_calls → 执行 → 把结果塞回 messages”。</p>
+            </div><div class="kcard">
+              <div class="kcard-head"><h4>Context Engineering</h4><span class="src">FastAPI P15-37</span></div>
+              <p class="kone">动态管理历史/长期记忆，给模型最优上下文</p>
+              <p class="kdetail">短期（同用户）+ 长期（跨用户相似检索）。比“把所有历史塞进去”更工程化。</p>
+            </div><div class="kcard">
+              <div class="kcard-head"><h4>Multi-Agent / SubAgent</h4><span class="src">FastAPI P15-37</span></div>
+              <p class="kone">Planning / Sandbox / Skills 的分工协作</p>
+              <p class="kdetail">把大任务拆给子 Agent，主 Agent 做规划与汇总。对应你的 agent.ts 循环可扩展为编排层。</p>
+            </div></div>
+        </section>
+        <section class="kgroup">
+          <h3 class="kgroup-title">RAG 原理</h3>
+          <div class="kgrid"><div class="kcard">
+              <div class="kcard-head"><h4>RAG 的本质（高手答法）</h4><span class="src">RAG P01-04</span></div>
+              <p class="kone">把外部知识引入推理过程的架构</p>
+              <p class="kdetail">不改模型参数，推理时检索相关知识，提升准确性/实时性/可追溯性。不是“向量库+大模型”这种流程描述。</p>
+            </div><div class="kcard">
+              <div class="kcard-head"><h4>什么时候不该用 RAG</h4><span class="src">RAG P01</span></div>
+              <p class="kone">知识固定且延迟极敏感 → 微调/长上下文；数据极小 → 直接塞 prompt</p>
+              <p class="kdetail">几十条数据上检索是过度设计。先判断再上 RAG。</p>
+            </div><div class="kcard">
+              <div class="kcard-head"><h4>Embedding vs 关键词</h4><span class="src">阶段3 / RAG P08-11</span></div>
+              <p class="kone">语义距离 vs 字面重合</p>
+              <p class="kdetail">关键词（你的 TF-IDF）同义词/改写就检索不到；向量能召回字面不同但意思近的内容，代价是语义漂移。工程上通常两者都要。</p>
+            </div><div class="kcard">
+              <div class="kcard-head"><h4>多路召回 vs 混合检索 vs Rerank</h4><span class="src">RAG P08-11 + P35-36</span></div>
+              <p class="kone">召回多通道 → 融合排序 → 精排取 Top-K</p>
+              <p class="kdetail">多路召回：关键词 BM25 + 向量各召回一批；混合检索：用 RRF 等融合；Rerank：交叉编码器精排（慢但准）。</p>
+            </div><div class="kcard">
+              <div class="kcard-head"><h4>高级 RAG（预检索）</h4><span class="src">RAG P26-31</span></div>
+              <p class="kone">查询转换 / HyDE / 句子窗口 / 层次索引</p>
+              <p class="kdetail">解决用户问法与知识库表述不一致、语义割裂的问题。你的“杀手锏”多路召回就在这里。</p>
+            </div></div>
+        </section>
+        <section class="kgroup">
+          <h3 class="kgroup-title">检索与向量</h3>
+          <div class="kgrid"><div class="kcard">
+              <div class="kcard-head"><h4>向量相似度</h4><span class="src">RAG P37 / 黑马 P20-21</span></div>
+              <p class="kone">余弦 / 欧氏 / 点积，适用场景不同</p>
+              <p class="kdetail">余弦对向量长度不敏感，最常用；点积受长度影响大；欧氏是几何距离。选错度量方法检索质量会掉。</p>
+            </div><div class="kcard">
+              <div class="kcard-head"><h4>向量索引</h4><span class="src">RAG P37-38</span></div>
+              <p class="kone">HNSW / IVF / Flat / LSH</p>
+              <p class="kdetail">HNSW（图，快，内存高）是默认；IVF 先聚类适合超大规模；Flat 暴力精确但慢。</p>
+            </div><div class="kcard">
+              <div class="kcard-head"><h4>向量数据库选型</h4><span class="src">RAG P39-40</span></div>
+              <p class="kone">Chroma / pgvector / Milvus / Qdrant</p>
+              <p class="kdetail">Chroma 本地开箱即用；pgvector 已有 Postgres 少引入组件；Milvus/Qdrant 数据量大要生产级扩展。</p>
+            </div></div>
+        </section>
+        <section class="kgroup">
+          <h3 class="kgroup-title">评估</h3>
+          <div class="kgrid"><div class="kcard">
+              <div class="kcard-head"><h4>Evals（高频挂点）</h4><span class="src">RAG P41 / test/</span></div>
+              <p class="kone">断言（确定性）+ 黄金问题集（非确定性）</p>
+              <p class="kdetail">面试官问“你怎么知道 agent 改好了还是改坏了”：确定性用断言（你 142 条），非确定性用黄金集跑命中率与回归。</p>
+            </div><div class="kcard">
+              <div class="kcard-head"><h4>RAG 评估指标</h4><span class="src">RAG P41</span></div>
+              <p class="kone">检索侧 Recall@K/MRR；生成侧忠实度/相关性/正确性</p>
+              <p class="kdetail">工具 RAGAs、TruLens。忠实度（faithfulness）看有没有编；相关性看答非所问。</p>
+            </div></div>
+        </section>
+        <section class="kgroup">
+          <h3 class="kgroup-title">LangGraph</h3>
+          <div class="kgrid"><div class="kcard">
+              <div class="kcard-head"><h4>LangGraph vs LangChain</h4><span class="src">尚硅谷 P08-12</span></div>
+              <p class="kone">组件库+链式编排 vs 显式状态机</p>
+              <p class="kdetail">LangChain 管“单个链怎么搭”，LangGraph 管“多个步骤怎么流转”（StateGraph：节点+边+条件分支+循环）。</p>
+            </div><div class="kcard">
+              <div class="kcard-head"><h4>StateGraph</h4><span class="src">尚硅谷 P28-47</span></div>
+              <p class="kone">节点 + 边 + 条件分支 + 循环</p>
+              <p class="kdetail">把流程建模成图，适合回退/分支/多 Agent 协作。你的 for 循环是它的最小特例。</p>
+            </div><div class="kcard">
+              <div class="kcard-head"><h4>四种图设计模式</h4><span class="src">尚硅谷 P128-132</span></div>
+              <p class="kone">提示词链 / 路由 / 编排器-工作者 / 评估器-优化器</p>
+              <p class="kdetail">多 Agent 协作的标准范式，面试能说出名字+区别就是加分项。</p>
+            </div><div class="kcard">
+              <div class="kcard-head"><h4>持久化 / 检查点</h4><span class="src">尚硅谷 P56-60</span></div>
+              <p class="kone">可恢复执行 ↔ 你的 memory.ts</p>
+              <p class="kdetail">“可恢复执行”是什么——中断后能从中断点继续。对应你落盘的会话状态。</p>
+            </div></div>
+        </section>
+        <section class="kgroup">
+          <h3 class="kgroup-title">后端 / FastAPI</h3>
+          <div class="kgrid"><div class="kcard">
+              <div class="kcard-head"><h4>同步 vs 异步 / WSGI vs ASGI</h4><span class="src">阶段2 P01/P04</span></div>
+              <p class="kone">AI 后端为什么必须异步</p>
+              <p class="kdetail">模型推理是 IO 密集，异步才能高并发。对应你 Node 单线程事件循环的设计。</p>
+            </div><div class="kcard">
+              <div class="kcard-head"><h4>Pydantic ↔ Zod</h4><span class="src">阶段2 P12-14</span></div>
+              <p class="kone">声明式数据校验</p>
+              <p class="kdetail">FastAPI 用 Pydantic 校验请求体；你 server.ts 里手工写校验，可对照迁移。</p>
+            </div><div class="kcard">
+              <div class="kcard-head"><h4>SSE 流式接口</h4><span class="src">阶段2 / 尚硅谷 P107-108</span></div>
+              <p class="kone">服务端推送打字机效果</p>
+              <p class="kdetail">你的 server.ts 已有 SSE；FastAPI 用 StreamingResponse 实现同一件事。</p>
+            </div></div>
+        </section></div>
+  <div id="project" class="tab hidden">
+    <div class="intro">
+      <p>你手写的零依赖 agent 项目，就是这些框架的「最小形态」。下面把每个源文件映射到对应知识点和视频分P——
+      学习时拿视频当“官方说明书”来反查自己的代码。</p>
+    </div>
+    <div class="pgrid"><div class="pcard">
+          <h4 class="mono">src/agent.ts</h4>
+          <p class="prole">核心循环：for 循环 + tool_calls 执行</p>
+          <p class="prel"><b>对应：</b>Chain vs Agent、ReAct、黑马 P55-67、尚硅谷 P40-47</p>
+          <p class="phow"><b>怎么学：</b>看黑马 P31（Chain）和 P55-59（ReAct），对着你循环里的「调模型→执行工具→塞回 messages」逐行标注。</p>
+        </div><div class="pcard">
+          <h4 class="mono">src/llm.ts</h4>
+          <p class="prole">调模型 + 流式 + 解析 tool_calls</p>
+          <p class="prel"><b>对应：</b>阶段1 P22-23（ChatOpenAI/流式）、P35（JsonOutputParser）</p>
+          <p class="phow"><b>怎么学：</b>看 P22-23 理解流式事件，看 P35 理解结构化解析失败怎么办——你的手工取 content/arguments 就是这课讲的细节。</p>
+        </div><div class="pcard">
+          <h4 class="mono">src/memory.ts</h4>
+          <p class="prole">会话记忆落盘</p>
+          <p class="prel"><b>对应：</b>阶段1 P37-38（Memory 分层）、尚硅谷 P56-60（持久化/检查点）</p>
+          <p class="phow"><b>怎么学：</b>P37-38 讲临时/长期记忆存什么存哪；P56-60 讲“可恢复执行”——你落盘 messages 就是记忆模块的雏形。</p>
+        </div><div class="pcard">
+          <h4 class="mono">src/rag.ts</h4>
+          <p class="prole">TF-IDF 检索（你的“向量通道”前身）</p>
+          <p class="prel"><b>对应：</b>阶段3 黑马 P19（链路）、P43（VectorStores）、RAG P35-36（Rerank）</p>
+          <p class="phow"><b>怎么学：</b>对比黑马 VectorStores 和 RAG 的 Rerank——你的 TF-IDF 是关键词通道，下一步就是加向量通道 + 精排。</p>
+        </div><div class="pcard">
+          <h4 class="mono">src/search.ts</h4>
+          <p class="prole">关键词检索 / 多路召回</p>
+          <p class="prel"><b>对应：</b>RAG P08-11（查询转换/混合检索/多路召回）★★</p>
+          <p class="phow"><b>怎么学：</b>这是你相对视频最容易做出差异化的地方。看 P08-11 把单路关键词扩展成「关键词+向量」多路召回 + RRF 融合。</p>
+        </div><div class="pcard">
+          <h4 class="mono">src/tools.ts</h4>
+          <p class="prole">工具定义与执行</p>
+          <p class="prel"><b>对应：</b>阶段1 P36（自定义函数加入链）、Function Calling</p>
+          <p class="phow"><b>怎么学：</b>看 P36 理解“把函数包成链的一环”；你的工具 description 写得好不好，直接决定模型会不会调对工具。</p>
+        </div><div class="pcard">
+          <h4 class="mono">src/server.ts</h4>
+          <p class="prole">异步服务 + SSE 流式接口</p>
+          <p class="prel"><b>对应：</b>阶段2（FastAPI/ASGI）、尚硅谷 P107-108（流式）</p>
+          <p class="phow"><b>怎么学：</b>对照 FastAPI 的 StreamingResponse 和 ASGI，理解你 Node 单线程非阻塞的设计取舍。</p>
+        </div><div class="pcard">
+          <h4 class="mono">src/docs.ts</h4>
+          <p class="prole">文档读取与切分</p>
+          <p class="prel"><b>对应：</b>黑马 P39-42（Loader / 文档分割器）</p>
+          <p class="phow"><b>怎么学：</b>黑马讲 CSV/JSON/Text/PDF Loader 和递归切分；你现在是简单分割，可对照升级成递归切割。</p>
+        </div><div class="pcard">
+          <h4 class="mono">src/compress.ts</h4>
+          <p class="prole">上下文压缩（后处理）</p>
+          <p class="prel"><b>对应：</b>RAG P29（提示词压缩）</p>
+          <p class="phow"><b>怎么学：</b>RAG P29 讲用 LLM 压缩提示词提升信息密度；你的 compress.ts 是同一思路的落地。</p>
+        </div><div class="pcard">
+          <h4 class="mono">src/types.ts</h4>
+          <p class="prole">消息协议类型（System/Human/AI）</p>
+          <p class="prel"><b>对应：</b>阶段1 P24-25（消息简写）</p>
+          <p class="phow"><b>怎么学：</b>P24-25 讲 SystemMessage/HumanMessage/AIMessage——“消息协议”是面试会被问的术语。</p>
+        </div><div class="pcard">
+          <h4 class="mono">src/trace.ts</h4>
+          <p class="prole">调用追踪 / 调试</p>
+          <p class="prel"><b>对应：</b>尚硅谷 P98-100（LangSmith 调试）</p>
+          <p class="phow"><b>怎么学：</b>“你怎么调试 agent”的答案——LangSmith 是官方方案，你的 trace.ts 是手写版。</p>
+        </div><div class="pcard">
+          <h4 class="mono">index.ts / web/index.html</h4>
+          <p class="prole">入口 / 前端 UI</p>
+          <p class="prel"><b>对应：</b>黑马 P46-54（RAG 项目全流程页面）</p>
+          <p class="phow"><b>怎么学：</b>黑马把“上传→会话→页面”做成完整闭环；你的 web 已经是这套，看 P46-54 补工程化细节。</p>
+        </div></div></div>
+  <div id="notes" class="tab hidden">
+    <div class="intro">
+      <p>共 <b>165</b> 份笔记，来自 4 门课。点击「打开原文」用默认程序查看完整 Markdown（含五节：
+      一句话总结 · 核心要点 · 和我的项目的对应 · 面试可能怎么问 · 存疑处）。</p>
+    </div>
+    <div class="searchbar">
+      <input id="nsearch" type="text" placeholder="搜标题或摘要，例如：Rerank / 评估 / memory / LangGraph" />
+      <div class="chips"><button class="chip active" data-c="all">全部</button><button class="chip" data-c="BV15oHC6zE9x">这绝对是b站把大模型RAG讲的最详细…</button><button class="chip" data-c="BV1brpc6CEyT">FastAPI框架持续火爆，《Fas…</button><button class="chip" data-c="BV1yjz5BLEoY">黑马程序员大模型RAG与Agent智…</button><button class="chip" data-c="BV1z3NY66EY1">尚硅谷LangGraph教程，lan…</button></div>
+    </div>
+    <div id="ngroups"><div class="ngroup" data-c="BV15oHC6zE9x"><h3>这绝对是b站把大模型RAG讲的最详细最全面的系统性教程，从RAG的功能原理到RAG的构建和检索评估，全程干活无废话！零基础小白必看！AI大模型/向量数据库 <span class="count">（27 份）</span></h3><div class="ngrid"><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P1</span>
+                <span class="ntitle">1.RAG检索流程图解</span></div>
+              <p class="nsum">本讲通过图解方式梳理了传统 RAG（检索增强生成）的核心构建与检索流程：先将企业非结构化数据清洗、切分、向量化存入向量库，再将用户提问向量化后检索相关片段，最后结合 LLM 生成回答，解决大模型缺乏企业内部私有知识的问题。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p1.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P2</span>
+                <span class="ntitle">2.RAG的构建流程讲解-2Step RAG_batch</span></div>
+              <p class="nsum">本讲主要介绍了 RAG（检索增强生成）的三种常见构建流程（Two-Step、Agent、Hybrid），并重点讲解了 **Two-Step RAG** 的执行逻辑、优缺点及其适用前提。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p2.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P3</span>
+                <span class="ntitle">3.RAG的构建流程讲解-Agentic RAG_batch</span></div>
+              <p class="nsum">Agentic RAG 将检索器（Retriever）封装为 Agent 的工具（Tool），让大模型自主决策是否检索及如何检索，取代了固定流程，但也引入了工具选错和循环导致成本失控的风险。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p3.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P4</span>
+                <span class="ntitle">4.RAG的构建流程讲解-Hybrid RAG_batch</span></div>
+              <p class="nsum">本讲定义了 **Hybrid RAG（混合RAG架构）** 的概念，将其定位为结合了固定工作流可控性与 Agent 自主性的中间路线，并澄清了它与 Hybrid Search（混合检索）在概念层次上的区别。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p4.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P8</span>
+                <span class="ntitle">8.RAG检索前-查询转换的介绍_batch</span></div>
+              <p class="nsum">本讲专注于 RAG 流程中**“检索前”**（Pre-retrieval）阶段的优化，核心是通过**查询转换**（Query Transformation）技术（如查询改写、多查询生成、假设嵌入）和**过滤/路由**机制，解决用户提问与知识库表述不一致导致检索不准的问题，以提高向量匹配的命中率。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p8.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P9</span>
+                <span class="ntitle">9.RAG检索中-混合检索的介绍_batch</span></div>
+              <p class="nsum">本讲介绍**混合检索（Hybrid Retrieval）**的核心概念：将关键词检索（Keyword）与向量检索（Vector）结合，通过**RRF（Reciprocal Rank Fusion，倒数排名融合）**算法对两路结果进行融合，最后使用 **ReRank（重排序）** 模型对 TopK 结果进行精准排序，以解决单一检索方式召回不全或排序不准的问题。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p9.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P10</span>
+                <span class="ntitle">10.多路召回检索的介绍_batch</span></div>
+              <p class="nsum">本讲主要介绍了 **Graph-RAG（基于知识图谱的检索增强生成）** 的必要性、构建过程中的核心难点（实体抽取、去重、相似实体合并），以及它作为“多路召回”中额外一路检索源的价值，并指出 Graph-RAG 内部也支持多路检索与融合。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p10.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P11</span>
+                <span class="ntitle">11. RAG检索后的介绍及大模型的三个学习方向_batch</span></div>
+              <p class="nsum">本讲首先澄清了RAG中“检索后处理”（如重排序、上下文压缩）的具体环节，进而引出RAG及Agent的离线/在线评估体系，最后转向职业规划，将大模型领域划分为工具、应用开发、算法微调三个方向，并指出应用开发（RAG/Agent）是当前市场的主流与转行首选。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p11.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P19</span>
+                <span class="ntitle">19.文本切割优化-提升数据质量</span></div>
+              <p class="nsum">本讲主要解决 RAG 中原始文档（如长篇幅 PDF）直接入库导致语义割裂的问题，提出使用**递归切割策略（Recursive Splitter）**替代简单的定长切割，通过「标题 -&gt; 段落 -&gt; 句子/语义块」的多层级切分提升数据质量。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p19.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P20</span>
+                <span class="ntitle">20.元数据增强优化-提升数据质量</span></div>
+              <p class="nsum">在将文档（如合同、论文）存入向量数据库之前，除了提取正文文本，还必须提取并保留其元数据（文件名、类型、标题层级等），以提升数据质量和检索效果。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p20.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P22</span>
+                <span class="ntitle">22. 数据库索引+二级索引优化-提升数据索引</span></div>
+              <p class="nsum">区分**密集向量**（Dense）和**稀疏向量**（Sparse）的数据结构差异，并指出针对这两种向量，在向量数据库中需要建立不同的**索引**（Index）和选择正确的**度量方法**（如 IP）来进行检索优化。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p22.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P23</span>
+                <span class="ntitle">23.检索评估+混合检索优化-提升搜索质量.</span></div>
+              <p class="nsum">本讲主要解决两个问题：一是介绍**混合检索**中所需的 **Rerank（重排序）模型**（推荐千问或BGE）；二是强调必须对检索结果进行**相关性评估**（使用 RAGAS 框架），通过打分（Score）剔除不相关结果，避免向 LLM 输入噪声导致幻觉。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p23.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P24</span>
+                <span class="ntitle">24.上下文工程优化-提升回答质量和速度</span></div>
+              <p class="nsum">本讲主要阐述了在 RAG 系统中引入**上下文工程（Context Engineering）**的必要性，即通过动态管理历史聊天记录（同用户短期记忆、跨用户长期相似性检索）来提供最优上下文；同时演示了包含思维链、评估、人工介入及多模态支持的大型工业级 RAG 工作流代码架构，并介绍了如何通过评估分数统计“正确率”。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p24.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P26</span>
+                <span class="ntitle">26.RAG技术原理与RAGFlow项目实操</span></div>
+              <p class="nsum">讲解 RAG（检索增强生成）的核心原理、四大流程（提取、索引、检索、生成）及优缺点，并实操部署开源项目 RAGFlow 实现本地知识库问答。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p26.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P27</span>
+                <span class="ntitle">27. Naive RAG与langchain实践</span></div>
+              <p class="nsum">本讲使用 LangChain 结合本地 LLM 工具链（Ollama + Chroma + 开源 Embedding 模型）搭建了一个最基础的 Naive RAG 管道，并验证了从“百度百科数据提取”到“检索生成”的全链路代码。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p27.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P28</span>
+                <span class="ntitle">28.高级RAG（一）层次索引，句子窗口，子查询，HyDE</span></div>
+              <p class="nsum">这一讲介绍了“高级 RAG”在基础 RAG 之上增加的**预检索**（优化索引结构、重写/拆分查询、HyDE）和**后检索**（检索后的处理，本讲主要聚焦预检索部分）两个环节，重点讲解了层次化索引（树索引、Small-to-Big）、句子窗口、子查询、HyDE 及其变体（假设问题）等具体技术手段。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p28.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P29</span>
+                <span class="ntitle">29.高级RAG（二）提示词压缩，融合，llamainde</span></div>
+              <p class="nsum">本讲主要解决 RAG 后处理阶段的两个核心问题：一是通过 LLM 对提示词进行**压缩**以提升信息密度；二是通过**混合搜索**（关键词+语义）与**融合算法**（RRF）解决单一检索方式不稳定或不全面的问题，最后演示了 LlamaIndex 构建标准 RAG 流程的代码实现。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p29.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P30</span>
+                <span class="ntitle">30. 模块化 RAG（一）顺序模式，条件模式，分支模式</span></div>
+              <p class="nsum">本讲介绍了**模块化 RAG** 的架构理念（三层结构：Module, Model, Operator），并重点讲解了推理阶段的三种经典执行模式：**顺序模式**（线性流水线）、**条件模式**（路由分流）和**分支模式**（并行执行），以及相应的微调（Turning）策略。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p30.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P31</span>
+                <span class="ntitle">31.模块化RAG（二）迭代，递归检索，FLARE，ToC</span></div>
+              <p class="nsum">本讲深入解析了 RAG 的三种高级迭代策略（迭代检索、递归检索、自反思检索 FLARE/Self-RAG），并通过一个 LangChain 实例演示了“多重查询 + RRF 融合”的具体工程落地流程，强调了策略选择需匹配业务场景。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p31.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P35</span>
+                <span class="ntitle">35.Rerank技术原理与实践（一）交叉编码与双编码</span></div>
+              <p class="nsum">本讲主要介绍在 RAG 系统中引入 Rerank（重排序）模型的必要性、原理（交叉编码器 vs 双编码器）及实践，解决向量检索（近似最近邻）在 Top-K 排序精确度不足以及混合检索后缺乏统一排序标准的问题。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p35.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P36</span>
+                <span class="ntitle">36.Rerank模型微调与实践（二）rankGPT</span></div>
+              <p class="nsum">本讲深入讲解 Rerank（重排序）的两种实现路径（独立模型 vs LLM 驱动）及微调方法，重点介绍了使用 **RankGPT**（基于 LLM 的滑动窗口重排）的原理，以及利用 **SentenceTransformer** 和 **FlagEmbedding** 微调 Rerank 模型的数据格式与参数设置，最后提及了模型合并与自动调参。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p36.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P37</span>
+                <span class="ntitle">37.向量数据库简介与相似性测量：欧式距离，余弦相似度</span></div>
+              <p class="nsum">本讲介绍了向量数据库的基本架构、索引类型（Flat/IVF/KD-Tree/HNSW/LSH），并详细解释了三种向量相似度计算方法：欧氏距离、余弦相似度和点积相似度，重点阐述了它们各自的适用场景和对向量长度敏感性的区别。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p37.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P38</span>
+                <span class="ntitle">38.相似性搜索算法：k-means，肘部法则</span></div>
+              <p class="nsum">本讲介绍了传统数据库索引的局限性，重点讲解了 K-means 聚类算法的原理、NumPy 实现优化、K 值选择（肘部法则）以及 K-means++ 初始化改进，这些是理解向量数据库底层高效检索机制的基础。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p38.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P39</span>
+                <span class="ntitle">39.向量数据库选型：专用向量数据库，传统数据库支持向量</span></div>
+              <p class="nsum">本讲通过对比专用向量数据库与传统数据库扩展支持向量的方案，指出选择核心在于**“向量检索是否为主要业务”**：若向量检索为主或数据量/维度较大，首选专用向量数据库；若仅为小数据量的辅助功能，且强依赖关系型数据库，可选用支持向量扩展的传统数据库（如 Postgres+PgVector、MongoDB、Redis、ES/OpenSearch）。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p39.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P40</span>
+                <span class="ntitle">40.向量数据库代码示例：chroma与qdrant代码</span></div>
+              <p class="nsum">演示如何使用向量数据库的**原生接口**（非 LangChain 封装）来操作 Chroma 和 Qdrant，并对比了 Java 生态的 Spring AI 与 Python 生态在 AI 开发上的差异及取舍。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p40.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P41</span>
+                <span class="ntitle">41.RAG评估：评估指标，RAGAs，TruLens</span></div>
+              <p class="nsum">针对 RAG 系统“搭建容易做好难”且缺乏系统化评估的痛点，本讲介绍了检索与生成环节的常用评估指标体系，并实战演示了使用 RAGAS、TruLens 和 LangChain/LlamaIndex 内置工具进行自动化评估的方法。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p41.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV15oHC6zE9x">
+              <div class="ncard-head"><span class="ntag mono">P42</span>
+                <span class="ntitle">42.RAG行业落地：实践心得，落地经验，业务场景</span></div>
+              <p class="nsum">本讲总结 RAG 相较于微调的落地优势与选型策略（向量数据库选择、中间件对比），并列举客服、生产、金融、法律、医疗及企业知识沉淀六大典型业务场景。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV15oHC6zE9x-p42.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div></div></div><div class="ngroup" data-c="BV1brpc6CEyT"><h3>FastAPI框架持续火爆，《FastAPI 完整实战教程｜Python 异步后端接口从入门到精通,做大模型 Agent 必备后端能力》 <span class="count">（37 份）</span></h3><div class="ngrid"><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P1</span>
+                <span class="ntitle">1：Web开发模式相关概念</span></div>
+              <p class="nsum">这一讲在进入 FastAPI 代码之前，先把 Web 开发的两种模式（前后端不分离 / 前后端分离）、后端返回数据的格式（JSON）、以及 API 接口的两种主流规范（RESTful / RPC）讲清楚，目的是让学员理解 FastAPI 为什么&quot;一出生就是为前后端分离设计的&quot;。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p1.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P2</span>
+                <span class="ntitle">大模型就业的方向</span></div>
+              <p class="nsum">讲师把 2026 年起的大模型就业市场收敛为**工程化落地**和**算法研究**两个方向，逐一讲清各自的学历门槛、典型岗位、未来趋势，并反复强调：工程化落地≠不学算法，且两个方向都必须持续学习，否则会被淘汰。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p2.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P3</span>
+                <span class="ntitle">大模型技术栈</span></div>
+              <p class="nsum">这一讲回答&quot;做 AI 大模型工程化落地（Agent / RAG 方向）到底要学哪些技术栈&quot;，讲师用粗体/非粗体区分了&quot;必须掌握&quot;和&quot;只需了解&quot;，并强调 2026 年面试对算法基础的要求比 2025 年明显提高，但应用岗不需要学到算法研究岗的深度。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p3.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P4</span>
+                <span class="ntitle">2：ASGI协议和服务</span></div>
+              <p class="nsum">讲清 WSGI 与 ASGI 这两个&quot;Web 服务器 ↔ Python 应用&quot;之间的通信协议规范是什么、区别在哪，以及 FastAPI 为什么必须跑在 ASGI 上、由谁来提供 ASGI 服务（Uvicorn / Hypercorn）。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p4.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P5</span>
+                <span class="ntitle">3：FastAPI的第一个程序</span></div>
+              <p class="nsum">从零搭一个 FastAPI 开发环境：装 virtualenv → 建虚拟环境 → 用 `pip install &quot;fastapi[all]&quot;` 一次性装齐依赖 → 在 PyCharm 里跑通第一个接口并访问 `/docs`。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p5.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P6</span>
+                <span class="ntitle">4：接口文档打开慢的问题</span></div>
+              <p class="nsum">FastAPI 自带的 Swagger UI 接口文档（`/docs`）默认从国外 CDN 加载 JS/CSS/PNG 三个静态文件，国内访问极慢甚至打不开；解决办法是把这三个文件下载到本地 `static/` 目录，改 FastAPI 源码里的 URL 指向本地，再用 `app.mount()` 注册静态文件服务。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p6.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P7</span>
+                <span class="ntitle">5：路由和启动方式</span></div>
+              <p class="nsum">讲清 FastAPI 路由的本质（路径 + 方法 + 视图函数三者映射），演示 405 错误说明三者必须全部匹配，再给出三种启动方式（PyCharm 按钮 / uvicorn 命令行 / main.py 代码调用），最后补充路由装饰器里 tags、summary、description 等参数只影响接口文档展示、不影响功能。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p7.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P8</span>
+                <span class="ntitle">6：路由分发</span></div>
+              <p class="nsum">项目大了以后不可能把几百上千个接口函数全塞在一个 py 文件里，FastAPI 用 `APIRouter` 把路由按功能模块拆成&quot;分路由&quot;，再用 `app.include_router()` 挂到主 app 上——这就是路由分发。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p8.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P9</span>
+                <span class="ntitle">7：路由传参(一)</span></div>
+              <p class="nsum">讲 FastAPI 中通过 URL 路径携带参数（路由传参）的写法、接收方式、自动类型转换与校验，以及带参数路由和固定路径路由之间的匹配冲突及解决。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p9.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P10</span>
+                <span class="ntitle">8：路由传参(二)</span></div>
+              <p class="nsum">用 Python 枚举（Enum）给路由传参加&quot;预设值&quot;约束，让 FastAPI 自动在 Swagger 文档里生成下拉框，并用 `Path(description=...)` 给参数写中文说明，方便团队其他人对接。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p10.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P11</span>
+                <span class="ntitle">9：URL传参</span></div>
+              <p class="nsum">讲 FastAPI 中 **Query Parameters（URL 传参）** 的用法：参数放在请求 URL 问号后面、以 `key=value&amp;key=value` 形式携带，用 `Query()` 声明可选参数及描述，用 `List[int]` 接收同名多值参数。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p11.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P12</span>
+                <span class="ntitle">10：传参数的数据校验</span></div>
+              <p class="nsum">用 FastAPI 的 `Query` / `Path` 对象内置属性（`min_length`、`max_length`、`regex`、`ge`、`lt` 等）对 URL 传参做自动校验，不需要手写校验逻辑；`Query` 和 `Path` 的校验规则完全通用。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p12.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P13</span>
+                <span class="ntitle">11：请求体传参</span></div>
+              <p class="nsum">请求体（Request Body）传参是前后端分离项目中最常用的传参方式，核心做法是：定义一个 Pydantic `BaseModel` 子类来描述 JSON 结构，FastAPI 自动完成 JSON ↔ 对象的序列化/反序列化，同时附带字段校验和 Swagger 文档生成。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p13.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P14</span>
+                <span class="ntitle">12：请求体单个传参</span></div>
+              <p class="nsum">当请求体 JSON 里只有两三个简单字段时，不必定义 Pydantic 模型类，直接用 FastAPI 的 `Body()` 把每个字段作为函数形参逐个接收。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p14.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P15</span>
+                <span class="ntitle">13：大模型岗位分类和HarnessAgent项目</span></div>
+              <p class="nsum">本讲主要介绍了当前大模型领域的两类岗位（算法研发 vs 工程落地）的区别，并引出一个基于 **Harness 架构**的企业级智能体项目案例，重点讲解了该智能体如何通过 ASGI 服务部署、沙箱（Sandbox）隔离用户数据以及连接外部 ERP 系统的宏观架构设计。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p15.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P16</span>
+                <span class="ntitle">14：Harness项目整体结构</span></div>
+              <p class="nsum">本讲通过演示一个真实的 Harness 架构智能体项目代码目录，展示了该项目如何将前端、后端 API、MCP 服务对接、预设 SQL 以及智能体核心逻辑（Memory、Middleware、SubAgent 等）进行模块化分层，旨在说明该架构在处理复杂任务和多智能体协同中的工程化落地方式。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p16.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P17</span>
+                <span class="ntitle">15：Harness驾驭工程的概念</span></div>
+              <p class="nsum">Harness（驾驭工程）是包含提示词工程和上下文工程的更高阶架构概念，其核心价值在于通过模型之外的系统化技术设施（工具、记忆、规划等），将大模型不确定的智能转化为可执行长周期复杂任务的稳定工作引擎。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p17.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P18</span>
+                <span class="ntitle">16: Harness架构的Planning能力</span></div>
+              <p class="nsum">本讲通过演示一个“长周期复杂任务”（如采购对比分析），展示了 Harness 架构中智能体如何自动识别任务复杂度，并调用特定工具生成带有状态追踪（Status）的任务清单（Todo List），从而实现 Planning（规划）能力。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p18.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P19</span>
+                <span class="ntitle">17:解析任务规划Planning能力</span></div>
+              <p class="nsum">本讲深入解析了 DeepAgent 框架中 **Planning（规划）** 能力的代码实现机制，核心是 `write_to_do` 工具如何将模糊目标转化为结构化的任务清单，并固化在智能体 State 中以防止上下文压缩导致的遗忘。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p19.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P20</span>
+                <span class="ntitle">18: Harness架构的文件后端解析</span></div>
+              <p class="nsum">本讲通过拆解项目中的 `CompositeBackend`，揭示了 Harness 架构中“文件后端”并非指向真实的操作系统文件系统，而是一种基于路由逻辑的**逻辑抽象层**，其底层存储可以是沙箱（Docker容器）、LangGraph 的 Memory（内存/数据库）或关系型数据库。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p20.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P21</span>
+                <span class="ntitle">19: Harness架构的Multi-Agent解析</span></div>
+              <p class="nsum">本讲深入解析 Harness 架构中子智能体（SubAgent）的任务分派机制与“弹性配置加载”设计，展示了如何通过 YAML 文件动态管理智能体，而非硬编码，从而实现零代码扩展新智能体。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p21.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P22</span>
+                <span class="ntitle">20: Harness架构的人工介入解析</span></div>
+              <p class="nsum">本讲演示了多智能体系统中“人工介入（Interrupt）”机制的具体运行流程，重点展示了如何通过 YAML 配置文件声明式地在特定工具节点插入人工确认断点，无需编写额外的业务逻辑代码即可实现数据补全与操作审批。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p22.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P23</span>
+                <span class="ntitle">21:Harness架构的Sandbox解析(一)</span></div>
+              <p class="nsum">本讲核心解决 Agent Harness 架构中的**安全问题**：通过引入阿里云开源的 **OpenSandbox** 基于 Docker 容器实现沙箱隔离，确保外部下载或自制的 Skill 在受限环境中运行，防止恶意代码破坏宿主机数据。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p23.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P24</span>
+                <span class="ntitle">22:Harness架构的Sandbox解析(二)</span></div>
+              <p class="nsum">本讲详细介绍了 Harness 架构中基于 Docker 的 Sandbox（沙箱）实现，包括沙箱的创建配置、文件后端封装、代理层设计（用于热替换）、生命周期管理（超时回收）以及健康检查中间件（钩子机制），旨在实现用户级的隔离与故障自愈。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p24.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P25</span>
+                <span class="ntitle">23:Harness架构中自我进化的Skills(一)</span></div>
+              <p class="nsum">本讲介绍了 Harness 架构中 Skill（技能）系统的**“存储与执行分离”**设计：Skill 在沙箱中执行以保证安全，持久化到 MongoDB 以解决沙箱回收导致的丢失问题；并通过“母技能”（Skill Manager）实现 Skill 的自动下载、创建、测试与分配，赋予智能体自我进化能力。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p25.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P26</span>
+                <span class="ntitle">24:Harness架构中自我进化的Skills(二)</span></div>
+              <p class="nsum">本讲重点解析 Harness 架构中 Skills（技能）的**渐进式披露机制**与**自我进化流程**。讲师展示了如何自定义 Middleware 管理 Skills 的同步，以及如何通过“沙箱测试-自动修复-分配持久化”的闭环实现 Skills 的自动化管理，而非单纯的使用。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p26.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P27</span>
+                <span class="ntitle">25: Harness架构的Context-Engineering(一)</span></div>
+              <p class="nsum">本讲阐述了 Harness 架构下上下文工程（Context Engineering）的核心理念：通过**启动时加载**（系统提示词+用户偏好）、**运行中压缩**（Offload 与 Summarization）等流程，确保大模型在有限窗口内获取正确且必要的信息，避免提示词工程失效及上下文溢出导致的 Agent 崩溃。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p27.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P28</span>
+                <span class="ntitle">26: Harness架构的Context-Engineering(二)</span></div>
+              <p class="nsum">本讲深入解析 DeepAgent 框架中上下文工程的三种摘要机制（自动触发、工具化手动触发、多智能体隔离）及其配置策略，重点说明了如何通过“工具化”让 LLM 自主决策摘要时机，以及利用多智能体架构实现上下文天然隔离。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p28.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P29</span>
+                <span class="ntitle">27: Harness架构的用户偏好解析(一)</span></div>
+              <p class="nsum">这一讲主要演示了如何在基于 LangGraph 的 Agent 架构中，通过 Checkpoint 机制将短期记忆（对话历史）持久化到 MongoDB，以及如何利用抽象文件接口将长期记忆（用户偏好 `preferences.md`）存储在数据库中而非本地文件系统。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p29.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P30</span>
+                <span class="ntitle">28:Harness架构的用户偏好解析(二)</span></div>
+              <p class="nsum">这一讲演示了 Harness 架构中**用户偏好（记忆）文件**的自动化管理机制：通过 `before_agent` 钩子从运行时上下文提取用户 ID，定位并创建/读取偏好文件，并通过工具调用让智能体自动更新该文件。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p30.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P31</span>
+                <span class="ntitle">29:Harness架构的人工介入详解</span></div>
+              <p class="nsum">讲师详解了 Harness 架构中**人工介入（Human in the Loop）**的两种实现方式（工具内部 `interrupt` 函数 vs 配置文件 `interrupt_on`），并梳理了从后端检测到中断、通过 SSE 推送到前端、用户输入后通过 `command` 恢复执行的完整闭环流程。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p31.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P32</span>
+                <span class="ntitle">30: Harness架构的SSE事件流</span></div>
+              <p class="nsum">这一讲是 Harness 架构项目 7 个核心能力的收官篇，重点讲解了如何利用 FastAPI 的 `StreamingResponse` 和 SSE（Server-Sent Events）机制，将智能体的流式输出（Tokens）和中断（Human-in-the-loop）转换为前端可消费的标准化事件流，并实现了前后端的实时交互与历史对话管理。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p32.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P33</span>
+                <span class="ntitle">31: Harness架构的中间件解析</span></div>
+              <p class="nsum">本讲重点解析 Harness 架构项目中如何通过 **17 个中间件（Middleware）** 实现故障的全场景覆盖，明确区分了“框架自带中间件”与“用户自定义中间件”，并展示了如何将主动摘要、被动熔断、记忆同步等机制通过钩子函数（Hooks）绑定到主智能体生命周期中。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p33.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P34</span>
+                <span class="ntitle">32:Harness架构的AsyncSubAgent解析(一)</span></div>
+              <p class="nsum">为解决 Harness 多智能体架构中，长耗时子智能体（如采购分析）阻塞主智能体交互的问题，引入 LangGraph 提供的 **Async SubAgent**（异步子智能体）功能，将其部署为独立后台服务，实现任务并行执行与状态监控。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p34.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P35</span>
+                <span class="ntitle">33:Harness架构的AsyncSubAgent解析(二)</span></div>
+              <p class="nsum">本讲通过对比配置和代码，解析如何在 LangGraph 中注册并管理“异步子智能体”（Async SubAgent），核心是利用 `langgraph-dev` 将子智能体部署为独立服务，主智能体通过特定的中间件（Middleware）工具来启动、监控和控制这些后台运行的子任务。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p35.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P36</span>
+                <span class="ntitle">34:Harness架构的AsyncSubAgent解析(三)</span></div>
+              <p class="nsum">本讲演示了 Harness 架构中**异步子智能体（Async SubAgent）**的实际运行效果：主智能体发起后台任务后立即释放控制权，用户可继续交互其他问题，并能随时通过特定工具查询或终止后台任务的状态。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p36.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1brpc6CEyT">
+              <div class="ncard-head"><span class="ntag mono">P37</span>
+                <span class="ntitle">35:AI大模型如何基于Harness去找工作</span></div>
+              <p class="nsum">基于 Harness 架构的“智能体研发工程师”岗位正在兴起（以 DeepSeek 为代表的公司开始招聘），求职需掌握 Harness 架构核心组件（上下文工程、记忆、SQL、沙箱）、高级 RAG 技术（Agentic RAG、多路召回、重排）、以及微调与部署能力，并需在简历中体现“多智能体”和“深度 RAG 优化”以通过筛选。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1brpc6CEyT-p37.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div></div></div><div class="ngroup" data-c="BV1yjz5BLEoY"><h3>黑马程序员大模型RAG与Agent智能体项目实战教程，基于主流的LangChain技术从大模型提示词到实战项目 <span class="count">（58 份）</span></h3><div class="ngrid"><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P1</span>
+                <span class="ntitle">课程导学</span></div>
+              <p class="nsum">这一讲是**课程导学**，没有技术内容：讲清「为什么学、学什么、用什么工具、需要什么基础」。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p1.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P11</span>
+                <span class="ntitle">提示词工程-01、大模型prompt工程指南</span></div>
+              <p class="nsum">提示词工程 = 在不改模型权重的前提下，通过设计提问方式（详细描述、角色设定、分隔符、分步骤、给例子、提供参考文本）来控制模型输出质量；它是 RAG、Agent 等一切大模型应用开发的底层基本功。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p11.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P12</span>
+                <span class="ntitle">提示词工程-02、提示词优化案例介绍和零样本少样本思想</span></div>
+              <p class="nsum">这一讲用金融文本分析（分类 / 信息抽取 / 文本匹配）作为实战案例的引子，把 **Zero-shot（零样本）** 和 **Few-shot（少样本）** 两种提示词设计思想讲清楚——前者靠语言描述任务、完全信任模型预训练知识；后者在提示词里塞少量示例、引导模型对齐输出格式。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p12.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P13</span>
+                <span class="ntitle">提示词工程-03、提示词优化案例_金融文本分类任务</span></div>
+              <p class="nsum">用 few-shot 方式（在 messages 里预置多轮 user/assistant 对话作为示例）让大模型完成金融文本四分类任务，并演示了从云端 API 切换到本地 Ollama 只需改 base_url 和 model 名。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p13.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P14</span>
+                <span class="ntitle">提示词工程-04、JSON 数据格式</span></div>
+              <p class="nsum">在后续提示词案例需要让大模型输出/解析 JSON 之前，先补一节 JSON 基础：它是什么、为什么比纯文本和 CSV 更适合程序间数据交换、以及 Python 里 `json.dumps()` / `json.loads()` 怎么用。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p14.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P15</span>
+                <span class="ntitle">提示词工程-05、提示词优化案例_金融文本信息抽取</span></div>
+              <p class="nsum">用 Few-Shot 示例把&quot;从非结构化金融文本中抽取 5 个字段并输出 JSON&quot;这个任务教给模型，核心手法是在 messages 里塞入完整的 user→assistant 对话对作为示例，让模型模仿格式输出。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p15.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P16</span>
+                <span class="ntitle">提示词工程-06、提示词优化案例_金融文本匹配</span></div>
+              <p class="nsum">用 few-shot 提示词让模型判断成对金融短文本是否语义关联（输出&quot;是/不是&quot;），核心手法是：system 定任务 → 多轮 user/assistant 示例教格式 → 最后追加真实问题；同时用中文引号包裹句子提升模型识别精度。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p16.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P17</span>
+                <span class="ntitle">RAG开发-01、LangChain的简介</span></div>
+              <p class="nsum">这一讲是 LangChain 的&quot;是什么&quot;扫盲：它不造模型，而是给各种大模型套一层统一的编程接口（SDK），把提示词、模型调用、会话管理、文档索引、链式编排、智能体这六类能力打包好，让开发者不用从零搭。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p17.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P18</span>
+                <span class="ntitle">RAG开发-02、LangChain的环境部署</span></div>
+              <p class="nsum">用 `pip install` 一次性装好 LangChain 核心包 + 社区包 + Ollama 适配包 + DashScope SDK + ChromaDB 共五个包，并用清华镜像源加速，装完在 Python 解释器里 `import langchain` 验证通过即完成环境部署。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p18.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P19</span>
+                <span class="ntitle">RAG开发-03、RAG介绍</span></div>
+              <p class="nsum">这一讲从基础大模型的四个固有缺陷出发，引出 RAG（检索增强生成）的概念，讲清它的离线索引 + 在线检索生成两条工作线，并把 RAG 的本质归结为&quot;一种更高级的提示词优化&quot;。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p19.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P20</span>
+                <span class="ntitle">RAG开发-04、[扩展]向量的基础概念</span></div>
+              <p class="nsum">这一讲解释 RAG 流程中&quot;向量&quot;到底是什么：它是文本经嵌入模型转换后的固定长度数字序列，让计算机能通过余弦相似度等算法比较两段文本的语义是否相近；同时讲清了向量维度（如 1536 维）的含义以及维度数与精度/性能之间的取舍。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p20.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P21</span>
+                <span class="ntitle">RAG开发-05、[扩展]余弦相似度算法</span></div>
+              <p class="nsum">从一维→二维→高维逐步建立&quot;向量 = 方向 + 长度&quot;的直觉，然后拆解余弦相似度公式（点积 ÷ 模长乘积），最后用 Python 手写三个函数完成计算并验证结果。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p21.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P22</span>
+                <span class="ntitle">RAG开发-06、LangChain调用大语言模型</span></div>
+              <p class="nsum">LangChain 通过统一的模型组件接口，把&quot;调大模型&quot;简化成两步：创建模型对象 → 调用 `invoke()`，本讲分别演示了访问阿里云通义千问（云端）和 Ollama 本地模型两种写法。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p22.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P23</span>
+                <span class="ntitle">RAG开发-07、LangChain模型的流式输出</span></div>
+              <p class="nsum">LangChain 模型对象提供 `invoke`（阻塞、一次性返回）和 `stream`（逐段流式返回）两个方法，把 `invoke` 换成 `stream` 即可实现流式输出；这两个方法是 LangChain 1.0 之后基于 Runnable 接口的统一范式，绝大多数组件都支持。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p23.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P24</span>
+                <span class="ntitle">RAG开发-08、LangChain调用聊天模型</span></div>
+              <p class="nsum">LangChain 的聊天模型（Chat Model）用 `HumanMessage` / `AIMessage` / `SystemMessage` 三种消息对象替代 OpenAI SDK 里的 role 字符串，调用方式（`stream` / `invoke`）和消息列表结构基本一致，切换云端通义千问与本地 Ollama 只需换导入的类。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p24.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P25</span>
+                <span class="ntitle">RAG开发-09、LangChain消息的简写形式</span></div>
+              <p class="nsum">LangChain 中创建消息对象除了 `SystemMessage(...)` 这类实例化写法，还可以用二元元组 `(&quot;System&quot;, &quot;内容&quot;)` 简写，LangChain 运行时自动转换为对应消息对象；简写的核心价值在于**支持变量占位符注入**，为后续提示词模板铺路。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p25.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P26</span>
+                <span class="ntitle">RAG开发-10、LangChain调用嵌入模型</span></div>
+              <p class="nsum">这一讲演示了 LangChain 中嵌入模型（Embeddings）的调用方式：用 `embed_query` 做单条文本→向量转换、用 `embed_documents` 做批量转换，并对比了阿里云通义千问（DashScopeEmbeddings）和 Ollama 本地（OllamaEmbeddings）两种接入方式，强调切换后端只需改导包和类名、API 完全一致。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p26.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P27</span>
+                <span class="ntitle">RAG开发-11、LangChain通用提示词模板</span></div>
+              <p class="nsum">LangChain 用 `PromptTemplate` 类把提示词从&quot;裸字符串&quot;升级为可参与链式调用（Chain）的 Runnable 对象，本讲演示了模板构建、变量注入、以及 `prompt</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p27.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P28</span>
+                <span class="ntitle">RAG开发-12、FewShot提示词模板</span></div>
+              <p class="nsum">用 LangChain 的 `FewShotPromptTemplate` 把&quot;前缀指令 + N 条示例 + 后缀提问&quot;组装成一条完整提示词，核心收益是示例数量可动态扩展而模板本身不用改。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p28.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P29</span>
+                <span class="ntitle">RAG开发-13、模板类的format和invoke方法</span></div>
+              <p class="nsum">LangChain 的三种提示词模板类（PromptTemplate / FewShotPromptTemplate / ChatPromptTemplate）都同时拥有 `format` 和 `invoke` 两个方法，本讲讲清它们的继承来源、返回值差异、传参差异，以及为什么上链时必须用 `invoke`。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p29.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P30</span>
+                <span class="ntitle">RAG开发-14、ChatPromptTemplate的使用</span></div>
+              <p class="nsum">ChatPromptTemplate 是 LangChain 第三种提示词模板，核心能力是通过 `MessagesPlaceholder` 把**动态的多轮历史对话**注入到固定模板结构中，再用 `invoke()` 渲染出完整提示词交给模型。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p30.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P31</span>
+                <span class="ntitle">RAG开发-15、Chain的基础使用</span></div>
+              <p class="nsum">LangChain 的 Chain（链）就是用 `</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p31.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P32</span>
+                <span class="ntitle">RAG开发-16、[扩展]或运算符的重写</span></div>
+              <p class="nsum">用 Python 自定义类重写 `__or__` 魔法方法，实现 `a</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p32.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P33</span>
+                <span class="ntitle">RAG开发-17、简单理解Runnable接口</span></div>
+              <p class="nsum">LangChain 里用 `</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p33.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P34</span>
+                <span class="ntitle">RAG开发-18、StrOutputParser字符串输出解析器</span></div>
+              <p class="nsum">LangChain 链中模型输出是 `AIMessage` 对象，而模型 `invoke` 只接受 `PromptValue` / 字符串 / sequence，类型不匹配导致链执行报错；`StrOutputParser` 的作用就是把 `AIMessage` 拆成纯字符串，且它本身也是 `Runnable` 实现类，可以直接入链充当&quot;类型适配器&quot;。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p34.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P35</span>
+                <span class="ntitle">RAG开发-19、JsonOutputParser和多模型执行链</span></div>
+              <p class="nsum">多模型执行链中，上一个模型的输出（AIMessage）不能裸传给下一个模型，必须经过解析器转为字典后注入新的提示词模板；本讲引入 `JsonOutputParser`（AIMessage → dict）替代 `StrOutputParser`（AIMessage → str），并强调构建链时前后组件的输入输出类型必须兼容。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p35.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P36</span>
+                <span class="ntitle">RAG开发-20、自定义函数加入链</span></div>
+              <p class="nsum">用 `RunnableLambda` 把任意 Python 函数包装成 `Runnable` 接口，从而插入 LangChain 的链（Chain）中，替代 `JsonOutputParser` 等固定解析器，实现自定义的数据转换逻辑。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p36.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P37</span>
+                <span class="ntitle">RAG开发-21、Memory临时会话记忆</span></div>
+              <p class="nsum">用 LangChain 内置的 `RunnableWithMessageHistory` + `InMemoryChatMessageHistory` 两个类，给一条普通链&quot;套上&quot;自动附加历史会话记录的能力，实现多轮对话的临时记忆（程序一关就丢）。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p37.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P38</span>
+                <span class="ntitle">RAG开发-22、Memory长期会话记忆</span></div>
+              <p class="nsum">上一节用 `InMemoryChatMessageHistory` 实现了内存级短期会话记忆，程序一退出记忆就没了；这一节继承 `BaseChatMessageHistory`，手写一个 `FileChatMessageHistory`，把每个 SessionID 的对话历史以 JSON 文件落盘，实现&quot;重启程序后记忆还在&quot;的长期会话记忆。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p38.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P39</span>
+                <span class="ntitle">RAG开发-23、CSVLoader</span></div>
+              <p class="nsum">这一讲主要介绍 LangChain 文档加载器（Document Loader）的统一接口（`BaseLoader`）和统一数据载体（`Document` 类），并重点演示了 `CSVLoader` 的使用方法，包括 `loader()` 批量加载和 `lazy_loader()` 懒加载的区别，以及 CSV 解析中的三个关键参数（分隔符、引号包裹、表头指定）。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p39.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P40</span>
+                <span class="ntitle">RAG开发-24、JSONLoader</span></div>
+              <p class="nsum">介绍如何使用 LangChain 的 `JSONLoader` 将 JSON 数据加载为 `Document` 对象，重点讲解了基于 `jq` 语法的抽取规则，以及处理标准 JSON 对象、JSON 数组和 NDJSON 文件时的参数配置陷阱。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p40.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P41</span>
+                <span class="ntitle">RAG开发-25、TextLoader和文档分割器</span></div>
+              <p class="nsum">解决大文本文件无法直接作为 RAG 检索单元的问题，通过 `TextLoader` 加载全文，再用 `RecursiveCharacterTextSplitter` 按自然段落和字数限制切分成多个小 `Document`，从而提升后续语义匹配的精准度。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p41.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P42</span>
+                <span class="ntitle">RAG开发-26、PyPDFLoader</span></div>
+              <p class="nsum">本讲演示了如何使用 LangChain 内置的 `PyPDFLoader` 类读取 PDF 文件中的文字内容，并介绍了处理多页文档、加密文档以及不同加载模式（page/single）的参数配置。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p42.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P43</span>
+                <span class="ntitle">RAG开发-27、VectorStores向量存储</span></div>
+              <p class="nsum">本讲通过 `InMemoryVectorStore` 和 `Chroma` 两种实现，演示了 LangChain 中向量存储的**增删查（CRUD 中的 C、U、D、R）**核心操作，并展示了如何利用元数据（Metadata）进行过滤检索。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p43.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P44</span>
+                <span class="ntitle">RAG开发-28、基于向量检索构建提示词</span></div>
+              <p class="nsum">本讲演示了 RAG 系统“在线流程”（查询阶段）的最简闭环：将用户问题通过向量检索匹配参考资料，并将“问题+参考资料”注入到提示词模板中调用大模型生成回答。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p44.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P45</span>
+                <span class="ntitle">RAG开发-29、RunnablePassthrough的使用</span></div>
+              <p class="nsum">解决向量检索器（Retriever）无法直接作为链（Chain）中一环的根本原因（类型不匹配 + 信息丢失），并介绍如何通过 `RunnablePassthrough` 配合字典结构，将向量检索“入链”（Integrate into the chain），实现检索结果与用户提问同步流向提示词模板（Prompt）。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p45.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P46</span>
+                <span class="ntitle">RAG项目-01、RAG项目案例介绍</span></div>
+              <p class="nsum">这一讲是RAG实战项目的开篇，主要回顾RAG的核心概念（离线处理与在线处理两条线），并介绍“某东商品衣服”案例项目的具体需求、涉及的文件结构（知识库更新服务+RAG主线流程）以及基于Streamlit的Web对话界面效果。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p46.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P47</span>
+                <span class="ntitle">RAG项目-02、RAG项目-文本上传WEB服务</span></div>
+              <p class="nsum">本讲实现 RAG 离线流程的第一步：用 Streamlit 搭建一个极简的文件上传 Web 页面，获取用户上传文件的原始内容（字符串），为后续“向量化入库”做准备。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p47.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P48</span>
+                <span class="ntitle">RAG项目-03、RAG项目-md5工具函数开发</span></div>
+              <p class="nsum">本讲完成了RAG项目中**知识库服务（KnowledgeBaseService）**的基础搭建，重点实现了三个用于**去重**的工具函数（获取MD5、检查MD5是否已存在、保存MD5记录），并确立了通过配置文件管理路径的规范。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p48.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P49</span>
+                <span class="ntitle">RAG项目-04、RAG项目-知识库更新服务</span></div>
+              <p class="nsum">实现 RAG 离线流程中的核心服务类 `KnowledgeBaseService`，主要完成 `upload_by_str` 方法：通过 MD5 去重、文本分割器处理、以及向 Chroma 向量库添加文档（含元数据），确保知识库内容不重复且可追踪。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p49.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P50</span>
+                <span class="ntitle">RAG项目-05、RAG项目-完成离线流程开发</span></div>
+              <p class="nsum">本讲通过利用 **Streamlit** 的 `st.session_state` 机制保持 `KnowledgeBaseService` 实例的持久化，解决了页面刷新导致对象重建的问题，最终实现了基于 Web 界面的知识库离线更新流程。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p50.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P51</span>
+                <span class="ntitle">RAG项目-06、RAG项目-在线流程向量存储服务代码</span></div>
+              <p class="nsum">本小节展示了在线 RAG 流程中**向量存储服务**的代码实现：通过 Chroma 向量库和嵌入模型获取一个 `Retriever`（检索器），以便后续组装进 LangChain 的链（Chain）中。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p51.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P52</span>
+                <span class="ntitle">RAG项目-07、RAG项目-rag服务核心代码开发</span></div>
+              <p class="nsum">本讲实现了 `RAGService` 核心类，通过 LangChain 链（Chain）将向量检索、提示词模板、聊天模型和输出解析器串联起来，跑通了“检索-增强-生成”的基础流程，并演示了如何调试打印最终发送给模型的提示词。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p52.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P53</span>
+                <span class="ntitle">RAG项目-08、RAG项目-历史会话记录功能的实现</span></div>
+              <p class="nsum">本讲在已实现的 RAG 检索增强生成链路中，通过引入 `with_message_history` 机制和基于文件的存储方案，为对话增加了多用户历史记录隔离功能，并解决了该增强机制与 RAG 检索器、提示词模板之间的数据格式兼容性问题。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p53.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P54</span>
+                <span class="ntitle">RAG项目-09、RAG项目-聊天页面开发</span></div>
+              <p class="nsum">本讲使用 Streamlit 构建 RAG 系统的用户交互界面，解决了页面刷新导致状态丢失的问题，并实现了 RAG 回复的流式输出及历史记录缓存。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p54.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P55</span>
+                <span class="ntitle">Agent智能体-01、Agent智能体介绍</span></div>
+              <p class="nsum">本讲定义了 Agent（智能体/代理）的核心概念：通过赋予 LLM 调用工具、自主规划和记忆的能力，使其从“仅回答问题”升级为“能执行动作并影响现实世界”，解决了单纯 LLM 或固定 Chain（链）无法处理动态、复杂多步骤任务的问题。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p55.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P56</span>
+                <span class="ntitle">Agent智能体-02、Agent智能体初体验</span></div>
+              <p class="nsum">本讲演示了如何使用 LangChain 的 `create_agent` 创建智能体，并通过自定义工具（Function Calling）扩展 LLM 的能力边界，让 Agent 能感知外部世界并执行具体任务（如查询天气）。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p56.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P57</span>
+                <span class="ntitle">Agent智能体-03、Agent的流式输出</span></div>
+              <p class="nsum">本讲演示了如何使用 LangChain 的 `stream` 方法替代 `invoke` 来实现 Agent 的流式响应，重点解析了流式数据中携带全量历史消息的特点，以及如何通过捕获异常的方式安全地从流中提取模型回复内容（`content`）和工具调用信息（`tool_calls`）。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p57.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P58</span>
+                <span class="ntitle">Agent智能体-04、Agent的ReAct行动框架</span></div>
+              <p class="nsum">本讲通过 BMI 计算案例，演示 LangChain Agent 内置的 ReAct 框架如何控制模型进行“思考-行动-观察”的多轮循环，直到得出最终结果。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p58.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P59</span>
+                <span class="ntitle">Agent智能体-05、Agent的middleware中间件</span></div>
+              <p class="nsum">本讲演示了如何利用 LangGraph 的 `middleware`（中间件）机制，在 Agent 生命周期的 6 个关键节点（Agent/Model/Tool 的前后及执行中）注入自定义监控逻辑，实现“旁路”观测而不改变核心执行流。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p59.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P60</span>
+                <span class="ntitle">Agent智能体-06、Agent智能体项目介绍</span></div>
+              <p class="nsum">本讲介绍了即将开发的“智扫通”项目架构：这是一个基于 LangChain 的综合型智能体项目，核心功能包含 RAG 智能问答和报告生成，其中 RAG 被封装为智能体的一个工具，通过流式执行最终在 Web 页面呈现结果。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p60.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P61</span>
+                <span class="ntitle">Agent智能体-07、[Agent项目]日志和路径工具开发</span></div>
+              <p class="nsum">本讲在 Agent 项目代码开发初期，重点编写了两个基础工具模块：`path_utils`（解决相对路径解析风险，提供统一绝对路径）和 `logger_utils`（基于 Python 标准库 `logging` 实现控制台+文件双通道日志输出，并通过 `__init__` 保护机制避免日志重复打印）。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p61.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P62</span>
+                <span class="ntitle">Agent智能体-08、[Agent项目]配置工具文件工具和提示词加载工具开发</span></div>
+              <p class="nsum">这一讲完成了 Agent 项目剩余的工具模块开发（配置文件处理、文件处理/去重、提示词加载），使项目具备从文件读取、配置管理到提示词外部化的完整基础能力，为后续业务逻辑提供标准化支持。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p62.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P63</span>
+                <span class="ntitle">Agent智能体-09、[Agent项目]向量存储服务开发</span></div>
+              <p class="nsum">本讲完成了 RAG 模块中**向量存储**部分的代码开发，主要实现了一个基于 **ChromaDB** 的向量存储服务类，涵盖模型工厂模式、文档加载（PDF/TXT）、文本分块以及基于 MD5 的去重逻辑，实现了将本地文档转为向量并存入数据库，最后验证了检索流程。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p63.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P64</span>
+                <span class="ntitle">Agent智能体-10、[Agent项目]RAG总结服务开发</span></div>
+              <p class="nsum">本节实现了 `RAGSummaryService` 类，将“向量检索”封装成一个可被大模型调用的“总结工具”：输入用户问题，检索相关文档，拼接成带格式的 Context，最后通过 LangChain Chain 让模型生成基于参考资料的概括性回答。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p64.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P65</span>
+                <span class="ntitle">Agent智能体-11、[Agent项目]tools工具开发</span></div>
+              <p class="nsum">本讲实现了 Agent 所需的六个工具函数（RAG检索、天气、定位、用户ID、月份、外部数据读取），并重点演示了如何手动解析 CSV 文件将其转化为嵌套字典结构供 Agent 调用，解决了“从外部系统获取用户历史使用记录以生成报告”的数据流转问题。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p65.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P66</span>
+                <span class="ntitle">Agent智能体-12、[Agent项目]中间件和Agent创建</span></div>
+              <p class="nsum">本讲完成了 LangChain 项目中三个核心中间件（Middleware）的开发（工具监控、模型日志、动态提示词切换），并整合这些组件通过 `create_react_agent` 构建了完整的 Agent，实现了从普通问答到动态报告生成的完整流程。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p66.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1yjz5BLEoY">
+              <div class="ncard-head"><span class="ntag mono">P67</span>
+                <span class="ntitle">Agent智能体-13、[Agent项目]用户界面开发</span></div>
+              <p class="nsum">使用 Streamlit 为之前开发的 LangChain ReAct Agent 构建一个支持流式输出的 Web 聊天界面，并实现历史消息管理、中间过程折叠以及“生成报告”功能的验证。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1yjz5BLEoY-p67.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div></div></div><div class="ngroup" data-c="BV1z3NY66EY1"><h3>尚硅谷LangGraph教程，langgraph入门，langgraph智能体项目实战 <span class="count">（43 份）</span></h3><div class="ngrid"><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P8</span>
+                <span class="ntitle">08_入门基础_langchain和langgraph定位区别</span></div>
+              <p class="nsum">LangChain 聚焦于高层 Agent 开发（封装了底层逻辑），而 LangGraph 是更底层的编排框架，用于实现复杂工作流、状态持久化和精细控制；简单场景用 LangChain，复杂场景用 LangGraph。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p8.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P9</span>
+                <span class="ntitle">09_入门基础_langgraph三要素组成</span></div>
+              <p class="nsum">本节介绍了 LangGraph 构建图的三个基本要素：State（状态）、Node（节点）、Edge（边），并解释了它们在运行时如何承载数据、执行逻辑和控制流转。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p9.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P10</span>
+                <span class="ntitle">10_入门基础_图运行过程</span></div>
+              <p class="nsum">本讲核心解决“LangGraph 图在运行时内部到底发生了什么”的问题，重点解析了**超步（Superstep）**的运行机制，明确了其包含的三个阶段：**路由（Routing）**、**执行（Execution）**、**提交（Committing）**，以及检查点（Checkpoint）的概念。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p10.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P11</span>
+                <span class="ntitle">11_入门基础_API风格选择</span></div>
+              <p class="nsum">针对 LangGraph 提供的两种 API 风格（图式 API 和 函数式 API）进行对比，明确在生产环境复杂 Agent 开发中优先选择 **图式 API（Graph API）** 的原因，并强调其对“状态、节点、边”显式建模的优势。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p11.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P12</span>
+                <span class="ntitle">12_入门基础_完成基础的graph流程</span></div>
+              <p class="nsum">这一讲通过代码实战演示了 LangGraph 最基础的流程构建：定义状态、定义节点、定义边，最后编译并运行图，实现了一个从 Start 到 Node1 再到 Node2 最后到 End 的线性数据流。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p12.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P14</span>
+                <span class="ntitle">14_入门基础_状态的多种实现dataclass</span></div>
+              <p class="nsum">本讲介绍了在 LangGraph 中定义状态（State）的三种方式（TypedDict、DataClass、Pydantic），重点演示了如何从常用的 `TypedDict` 切换到 `DataClass`，并指出了两者在访问语法（下标 vs 点号）及底层互转上的区别。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p14.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P15</span>
+                <span class="ntitle">15_入门基础_状态的多种实现pydantic</span></div>
+              <p class="nsum">本讲对比了 LangGraph 中定义 State 的第三种方式 **Pydantic**，分析了 Dict、Dataclass、Pydantic 三种方式在底层校验行为上的区别，并最终推荐 **Dict** 作为首选方式，因为它最贴合状态更新的语义且更轻量。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p15.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P16</span>
+                <span class="ntitle">16_入门基础_状态合并定义reducer</span></div>
+              <p class="nsum">本讲核心介绍了 LangGraph 状态管理中的 **Reducer（规约函数）** 机制，明确了其签名规则（`left`/`right` 参数含义），并解释了它在处理多节点并行写入同一状态字段时，如何解决数据覆盖冲突的问题。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p16.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P17</span>
+                <span class="ntitle">17_入门基础_reducer在langgraph中的应用</span></div>
+              <p class="nsum">本讲介绍了 LangGraph 如何利用 Python 的 `Annotated` 注解机制将 Reducer 绑定到状态字段上，并详细讲解了两个核心内置 Reducer：普通的累加器（`operator.add`）和专门用于管理对话历史的 `add_messages`。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p17.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P18</span>
+                <span class="ntitle">18_入门基础_状态归约的使用</span></div>
+              <p class="nsum">本讲通过代码演示 `add_messages` 内置 Reducer 的“按 ID 覆盖或追加”逻辑，并澄清了未显式定义 Reducer 时，LangGraph 状态更新的默认行为是“直接覆盖”而非累加。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p18.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P28</span>
+                <span class="ntitle">28_控制流_边的简单使用</span></div>
+              <p class="nsum">本讲介绍了 LangGraph 中如何通过 `add_edge` 方法在节点之间建立单向连接，从而定义最基础的控制流顺序。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p28.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P29</span>
+                <span class="ntitle">29_控制流_add_sequence</span></div>
+              <p class="nsum">当节点执行顺序是串联的（A -&gt; B -&gt; C）时，可以用 `add_sequence` 简化边和节点的添加；另外，指向 `END` 的边通常可以省略，因为图运行到最后一个节点后默认终止，但 `START` 是入口必须保留。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p29.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P30</span>
+                <span class="ntitle">30_控制流_并行节点</span></div>
+              <p class="nsum">本讲介绍了 LangGraph 中静态分支下的“并行节点”概念：当多个下游节点从同一个上游节点出发时，它们在同一个“超步（superstep）”中并行执行，从而利用并发缩短总耗时（特别是针对 LLM 调用），但要求状态字段具备合适的 Reducer 以处理并发写入。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p30.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P31</span>
+                <span class="ntitle">31_控制流_并行运行展示</span></div>
+              <p class="nsum">通过对比 LangGraph 中同一组 LLM 调用节点在“串行执行”与“并行执行”下的总耗时，直观展示并行节点如何利用等待时间提高整体运行效率。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p31.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P32</span>
+                <span class="ntitle">32_控制流_条件分支</span></div>
+              <p class="nsum">本节演示了 LangGraph 中**条件分支**的实现，核心是使用 `add_conditional_edges` 方法，通过路由函数（Router）决定图执行流是走哪条路径。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p32.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P33</span>
+                <span class="ntitle">33_控制流_使用path_map</span></div>
+              <p class="nsum">演示如何使用 LangGraph 的 `path_map` 参数，将条件分支（路由）的返回值从“具体的节点名称”解耦为“自定义标记”，通过映射关系指向真实节点。本讲强调此时与不使用 `path_map` 的区别尚不明显，真正的差异在于下一讲“路由到多个节点”的场景。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p33.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P34</span>
+                <span class="ntitle">34_控制流_映射多节点</span></div>
+              <p class="nsum">本讲演示了 LangGraph 中条件分支路由到多个节点时，显式声明 `PathMap`（注：转写稿中多次写为 PassMap/PoomJoke 等，结合上下文及 LangGraph 术语，此处应为 **PathMap** 或类似的映射机制，讲师原意是建立“路由标签”到“节点名”的映射）的重要性，解决因动态路由多个节点导致图结构无法正确绘制/识别的问题。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p34.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P40</span>
+                <span class="ntitle">40_控制流_agent构建中的循环结构</span></div>
+              <p class="nsum">这一讲旨在澄清 LangGraph 中循环结构的真正用途：**并非用于大模型内部的推理思考，而是用于 Agent 在“工具调用失败”或“需要多轮迭代”时维持执行流程的逻辑循环**。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p40.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P41</span>
+                <span class="ntitle">41_控制流_大模型配置工具调用</span></div>
+              <p class="nsum">本讲演示了如何在 LangChain 中定义并绑定工具（Tools）到大模型，并通过打印完整的响应对象（而非仅 content）来验证大模型是否触发了工具调用（即返回了 `tool_calls`），从而为构建 ReAct 循环结构做准备。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p41.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P42</span>
+                <span class="ntitle">42_控制流_静态循环控制</span></div>
+              <p class="nsum">本讲演示如何在 LangGraph 中构建一个**静态循环**的 Agent 架构，通过 `tool_node` 返回失败信息（模拟网络波动）并写回消息列表，让大模型在下一轮循环中自动重试工具调用，直至成功或决定终止。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p42.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P43</span>
+                <span class="ntitle">43_控制流_循环结构的动态实现</span></div>
+              <p class="nsum">在 LangGraph 中实现动态循环结构，通过在大模型节点中使用 `Command` 对象指定跳转节点（`goto`）并更新状态（`update`），替代传统的独立路由函数加条件边，使代码更简洁。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p43.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P44</span>
+                <span class="ntitle">44_控制流_限制循环步数</span></div>
+              <p class="nsum">本讲主要介绍在 LangGraph 中如何通过 `recursion_limit` 配置项限制循环的最大步数，以及如何通过读取 `metadata` 中的步骤计数器来优雅退出循环，避免无限循环导致的卡死或异常中断。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p44.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P45</span>
+                <span class="ntitle">45_控制流_主动退出</span></div>
+              <p class="nsum">演示了 LangGraph 中**优雅退出（主动退出）**的实现：通过在路由函数中读取 `RemainingSteps` 和当前超步（Supertstep），当剩余步数不足时返回 `END` 节点，使图正常终止而不抛出异常。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p45.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P46</span>
+                <span class="ntitle">46_控制流_被动方法</span></div>
+              <p class="nsum">讲解如何在 LangGraph 中使用**被动方法**（依赖框架自动抛出的 `GraphRecursionError`）来限制循环的最大步数，并与主动方法（基于 `remaining_steps` 路由判断）进行对比，指出被动方法实现简单但会导致图异常终止，不适合需要正常反馈的业务场景。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p46.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P47</span>
+                <span class="ntitle">47_控制流_边的总结</span></div>
+              <p class="nsum">本讲对 LangGraph 中**边（Edge）**的各种用法进行了系统性总结，重点区分了普通边、条件边、入口/出口点的写法，并强调了“并行执行”的陷阱以及“动态跳转（Command）”与“静态路由”的取舍。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p47.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P56</span>
+                <span class="ntitle">56_持久化_可恢复执行的含义</span></div>
+              <p class="nsum">本讲区分了“单节点缓存/重试”与“全局持久化/可恢复执行”的概念，明确了 LangGraph 中的 Checkpoint 机制旨在保存任务的执行进度和状态，以便在中断后从断点恢复整个工作流，而非仅仅保存单个节点的计算结果。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p56.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P57</span>
+                <span class="ntitle">57_持久化_持久化机制介绍</span></div>
+              <p class="nsum">LangGraph 的持久化机制通过在每个关键节点保存**状态快照（Checkpoints）**，并结合 **Thread ID** 进行隔离，使得 Agent 图执行中断后，可以通过加载快照从断点继续执行（可恢复执行），而不仅仅是一个变量缓存。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p57.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P58</span>
+                <span class="ntitle">58_持久化_启用可恢复执行</span></div>
+              <p class="nsum">这一讲解释了 LangGraph 的“可恢复执行”是如何基于“持久化机制”实现的：通过将图执行过程中的检查点（Checkpoint）存入持久化后端，利用线程 ID（Thread ID）即可在程序退出、节点中断或人工审批暂停后，从历史状态恢复或分叉继续执行。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p58.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P59</span>
+                <span class="ntitle">59_持久化_内存持久化</span></div>
+              <p class="nsum">这一讲演示了如何使用 LangGraph 提供的 `InMemorySaver` 实现基于内存的检查点存储，并通过 `thread_id` 实现多会话隔离，让 Agent 在同一线程内具备记忆能力。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p59.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P60</span>
+                <span class="ntitle">60_持久化_内存持久化和数据库持久化的区别</span></div>
+              <p class="nsum">本讲澄清了 LangGraph 中“内存检查点存储器”（Memory Saver）与“数据库检查点存储器”在持久化和跨进程/跨文件共享状态上的本质区别：内存快但隔离且不持久，数据库慢一点但能跨进程、跨文件、跨重启共享同一份状态。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p60.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P84</span>
+                <span class="ntitle">84_中断_两种中断机制</span></div>
+              <p class="nsum">本讲介绍了 LangGraph 中实现**人机交互**的两种核心中断机制：**动态中断**（通过代码调用 `interrupt` 函数暂停）和**静态中断**（通过配置参数指定暂停点），其中动态中断是业务开发的核心，静态中断主要用于调试。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p84.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P85</span>
+                <span class="ntitle">85_中断_主动中断的具体执行</span></div>
+              <p class="nsum">本讲详细解析 LangGraph 中 `interrupt`（动态中断）机制的核心逻辑：如何通过检查点（Checkpointer）保存状态实现暂停，以及如何利用 `Command` 对象携带用户反馈恢复执行，从而实现“Human-in-the-Loop”（HITL）交互。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p85.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P86</span>
+                <span class="ntitle">86_中断_HITL案例演示</span></div>
+              <p class="nsum">本讲通过一个极简的 LangGraph 示例，演示了如何利用 `interrupt` 函数和 Checkpoint 机制实现&quot;人在环路&quot;（Human-in-the-Loop, HITL）：图执行到节点时暂停，等待人工输入，再通过 `Command` 恢复执行。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p86.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P98</span>
+                <span class="ntitle">98_项目部署_本地部署对接Langsmith</span></div>
+              <p class="nsum">本讲演示如何将本地开发的 LangGraph Agent 通过 `langgraph dev` 命令部署到 LangSmith 云服务，实现远程追踪调试；重点介绍了前置依赖安装、项目最小架构（src + .env + langgraph.json）构建流程，以及 Windows 环境下因编码不匹配导致启动报错的解决方法。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p98.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P99</span>
+                <span class="ntitle">99_项目部署_Langsmith的调试使用</span></div>
+              <p class="nsum">演示如何在本地部署的 LangSmith 界面中调试 LangGraph 应用，展示了通过提交参数执行图、处理动态中断（Interrupt）以及设置静态断点（Static Breakpoints）来逐步调试流程的方法，并查看 Tracing 记录。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p99.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P100</span>
+                <span class="ntitle">100_项目部署_大模型agent部署</span></div>
+              <p class="nsum">利用 LangChain AI 开源的 `agent-chat-ui` 为 LangGraph Agent 添加类 ChatGPT 的 Web 界面，并实现“人工在环（Human-in-the-Loop）”机制，让用户在前端对工具调用进行审批（接受/拒绝/修改）。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p100.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P107</span>
+                <span class="ntitle">107_流式执行_langgraph流式执行概述</span></div>
+              <p class="nsum">本讲是 LangGraph 高级特性的开篇，核心讲解**流式执行（Streaming Execution）**的概念：与 `invoke` 等待最终结果不同，流式执行允许在图运行过程中实时输出中间状态和事件，从而改善大型任务的响应体验；并介绍了两套流式 API（`stream`/`astream` 和 `astream_events`）的区别。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p107.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P108</span>
+                <span class="ntitle">108_流式执行_基础状态内容输出</span></div>
+              <p class="nsum">本讲主要介绍 LangGraph 中 `stream`（同步）和 `astream`（异步）API 的使用，重点演示了如何通过 `stream_mode` 参数选择输出中间状态的全量数据（Values）或增量数据（Updates），并展示了多模式组合时的输出格式。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p108.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P128</span>
+                <span class="ntitle">128_图设计模型_提示词链和并行化</span></div>
+              <p class="nsum">本讲总结 LangGraph 官方推荐的两种高级图结构设计模式：**提示词链（Prompter Chain，顺序执行+质量门控）** 和 **并行化（Parallelization，任务拆分或多次独立判断）**，并各配一个“生成笑话”的小例子演示。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p128.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P129</span>
+                <span class="ntitle">129_图设计模型_路由</span></div>
+              <p class="nsum">本讲介绍 LangGraph 的第三种核心设计模式——**路由（Routing）**：通过大语言模型节点对输入进行语义判断，输出结构化的决策结果，再由路由函数将该结果映射到具体的下游节点，从而实现流程的分支控制。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p129.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P130</span>
+                <span class="ntitle">130_图设计模型_编排器_工作者模式</span></div>
+              <p class="nsum">介绍 LangGraph 的第四种设计模式：**编排器-工作者（Orchestrator-Worker）**。核心特征是任务数量在编译时未知，由编排器节点在运行时动态决定分发多少个工作者任务，最后通过聚合节点合并结果，本质是 Map-Reduce 模式。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p130.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P131</span>
+                <span class="ntitle">131_图设计模型_评估器_优化器</span></div>
+              <p class="nsum">本讲介绍 LangGraph 的“评估器-优化器”（Evaluator-Optimizer）设计模式，核心是利用**循环结构**配合**条件边**，让生成结果经过评估，若不达标则进入优化环节重新生成，直到达标或触发最大超步限制而中断。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p131.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div><div class="ncard" data-c="BV1z3NY66EY1">
+              <div class="ncard-head"><span class="ntag mono">P132</span>
+                <span class="ntitle">132_图设计模型_agent模式和总结</span></div>
+              <p class="nsum">本讲介绍了 LangGraph 中 **Agent 智能体循环** 这一最终的设计模式，并总结了之前讲解过的六种官方推荐图设计模式。核心在于 Agent 模式下，节点的执行顺序不再由代码硬编码控制，而是由大模型自主决定。</p>
+              <a class="nlink" href="file:///D:\work\AI\video-notes\notes/BV1z3NY66EY1-p132.md" target="_blank" rel="noopener">打开原文 ↗</a>
+            </div></div></div></div></div>
+</main>
+<footer>由笔记自动生成 · 数据来自 notes/索引.md · 双击即可离线学习</footer>
+<script>
+  const TOTAL = 165;
+  // tab switch
+  document.querySelectorAll('nav button').forEach(b => {
+    b.onclick = () => {
+      document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      document.querySelectorAll('.tab').forEach(t=>t.classList.add('hidden'));
+      document.getElementById(b.dataset.tab).classList.remove('hidden');
+      window.scrollTo(0,0);
+    };
+  });
+  // note search + filter
+  const search = document.getElementById('nsearch');
+  const chips = document.querySelectorAll('.chip');
+  let curC = 'all';
+  function applyFilter() {
+    const q = search.value.trim().toLowerCase();
+    document.querySelectorAll('.ngroup').forEach(g => {
+      const matchC = (curC === 'all' || g.dataset.c === curC);
+      let visible = 0;
+      g.querySelectorAll('.ncard').forEach(card => {
+        const txt = (card.textContent || '').toLowerCase();
+        const ok = matchC && (q === '' || txt.includes(q));
+        card.classList.toggle('hidden', !ok);
+        if (ok) visible++;
+      });
+      g.classList.toggle('hidden', !(matchC && visible > 0));
+    });
+  }
+  search.addEventListener('input', applyFilter);
+  chips.forEach(c => c.onclick = () => {
+    chips.forEach(x=>x.classList.remove('active'));
+    c.classList.add('active'); curC = c.dataset.c; applyFilter();
+  });
+</script>
+</body>
+</html>
